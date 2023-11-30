@@ -154,12 +154,22 @@ check (
         group by cod_album  -- agrega elas pelo codigo do album
         having COUNT(*) > 64 -- vê se a quantidade de faixas desse album não excede 64
     )
+)
+add constraint precoJusto
+check (preco <= 3 * (
+    select avg(preco) 
+    from album 
+    where cod_album 
+    in (
+        select distinct cod_album 
+        from faixa 
+        where tipo_gravacao = 'DDD')
+    )
 );
 
-ALTER TABLE Album
-ADD CONSTRAINT CK_Album_PrecoCompra
-CHECK (PrecoCompra <= 3 * (SELECT AVG(PrecoCompra) FROM Album WHERE AlbumID IN (SELECT DISTINCT AlbumID FROM Faixa WHERE TipoGravacao = 'DDD')));
 
+
+--faixa tem um relacionamento fraco com album
 
 --Quarta condição
 
