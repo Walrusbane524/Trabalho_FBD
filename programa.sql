@@ -5,7 +5,7 @@ ON PRIMARY
     SIZE = 100MB,
     MAXSIZE = UNLIMITED,
     FILEGROWTH = 10MB),
-FILEGROUP BDSpotPer_Secondary1
+FILEGROUP secundario
 (NAME = 'BDSpotPer_Secondary1_1',
     FILENAME = 'C:\Caminho\Para\Arquivos\BDSpotPer_Secondary1_1.ndf',
     SIZE = 50MB,
@@ -16,7 +16,7 @@ FILEGROUP BDSpotPer_Secondary1
     SIZE = 50MB,
     MAXSIZE = UNLIMITED,
     FILEGROWTH = 5MB),
-FILEGROUP BDSpotPer_Secondary2
+FILEGROUP terciario
 (NAME = 'BDSpotPer_Secondary2_1',
     FILENAME = 'C:\Caminho\Para\Arquivos\BDSpotPer_Secondary2_1.ndf',
     SIZE = 100MB,
@@ -31,33 +31,10 @@ LOG ON
 
 -- Definir o filegroup padrão para objetos
 ALTER DATABASE BDSpotPer
-MODIFY FILEGROUP BDSpotPer_Secondary2 DEFAULT;
+MODIFY FILEGROUP secundario DEFAULT;
 
 -- Criar tabelas
 USE BDSpotPer;
-
--- Tabelas alocadas no filegroup com dois arquivos
-CREATE TABLE Playlist (
-    PlaylistID INT PRIMARY KEY,
-    Name NVARCHAR(255)
-) ON BDSpotPer_Secondary2;
-
--- Outras tabelas alocadas no filegroup com dois arquivos
-
--- Tabelas alocadas no filegroup com um arquivo
-CREATE TABLE Track (
-    TrackID INT PRIMARY KEY,
-    Title NVARCHAR(255),
-    AlbumID INT FOREIGN KEY REFERENCES Album(AlbumID)
-) ON BDSpotPer_Secondary1;
-
-CREATE TABLE PlaylistTrack (
-    PlaylistID INT FOREIGN KEY REFERENCES Playlist(PlaylistID),
-    TrackID INT FOREIGN KEY REFERENCES Track(TrackID),
-    PRIMARY KEY (PlaylistID, TrackID)
-) ON BDSpotPer_Secondary1;
-
-
 
 create table gravadora(
     cod_gravadora int primary key,
@@ -84,7 +61,7 @@ create table midiaFisica(
 create table midia_musica(
     cod_meio foreign key references midiaFisica(cod_meio),
     cod_musica foreign key references faixa(cod_musica),
-    tipo_gravacao int,
+    tipo_gravacao char(10),
     numeroFaixa int
 )
 
@@ -117,7 +94,7 @@ create table faixa(
     cod_tipo_composicao foreign key references tipo_de_composicao(cod_tipo_composicao)
     cod_gravadora foreign key references gravadora(cod_gravadora),
 
-)
+) on terciario
 
 create table compositor_musica(
     cod_musica foreign key references faixa(cod_musica),
@@ -134,7 +111,7 @@ create table compositor(
 )
 
 create table periodo(
-    cod_periodo primary key,
+    cod_periodo varchar(255) primary key,
     comeco date,
     fim date,
     descricao varchar(255)
@@ -145,7 +122,7 @@ create table musica_playlist(
     cod_playlist foreign key references playlist(cod_playlist),
     numero_de_vezes_tocada int,
     ultima_vez_tocada date
-)
+) on terciario
 
 create table playlist(
     cod_playlist primary key,
@@ -153,7 +130,7 @@ create table playlist(
     tempo_de_execucao_total time,
     data_criacao date
     cod_usuario foreign key references usuario(cod_usuario)
-)
+) on terciario
 
 create table usuario(
     cod_usuario primary key
@@ -163,25 +140,36 @@ create table usuario(
 
 --Terceira condição:
 
+alter table album 
+add constraint tipoDaGravacaoBarroco
+check (cod_periodo = "Barroco" or not ("DDD" in (select tipo_gravacao from midia_musica m where m.cod_musica = cod_musica)))
+add constraint numeroMaximo
+check (
+    not exists (
+        select 1 
+        from faixa
+        inner join midia_musica on cod_musica
+        inner join midia_fisica on cod_meio
+        where cod_album = album.cod_album  --faixas com esse album
+        group by cod_album  -- agrega elas pelo codigo do album
+        having COUNT(*) > 64 -- vê se a quantidade de faixas desse album não excede 64
+    )
+)
+add constraint precoJusto
+check (preco <= 3 * (
+    select avg(preco) 
+    from album 
+    where cod_album 
+    in (
+        select distinct cod_album 
+        from faixa 
+        where tipo_gravacao = 'DDD')
+    )
+);
 
-ALTER TABLE Album
-ADD CONSTRAINT CK_Album_PeriodoBarroco
-CHECK (Periodo = 'Barroco' AND TipoGravacao = 'DDD');
 
-ALTER TABLE Album
-ADD CONSTRAINT CK_Album_MaxFaixas
-CHECK (NOT EXISTS (SELECT 1 FROM Faixa WHERE AlbumID = Album.AlbumID GROUP BY AlbumID HAVING COUNT(*) > 64));
 
-ALTER TABLE Faixa
-ADD CONSTRAINT FK_Faixa_Album
-FOREIGN KEY (AlbumID)
-REFERENCES Album(AlbumID)
-ON DELETE CASCADE;
-
-ALTER TABLE Album
-ADD CONSTRAINT CK_Album_PrecoCompra
-CHECK (PrecoCompra <= 3 * (SELECT AVG(PrecoCompra) FROM Album WHERE AlbumID IN (SELECT DISTINCT AlbumID FROM Faixa WHERE TipoGravacao = 'DDD')));
-
+--faixa tem um relacionamento fraco com album
 
 --Quarta condição
 
