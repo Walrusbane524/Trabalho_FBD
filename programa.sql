@@ -368,7 +368,7 @@ begin
     
 end;
 
---Quarta condição: Falhou
+--Quarta condição: Sucesso
 
 CREATE UNIQUE CLUSTERED INDEX IX_Faixa_CodigoAlbum
 ON faixa(cod_album)
@@ -376,7 +376,7 @@ WITH FILLFACTOR = 100;
 
 
 CREATE NONCLUSTERED INDEX IX_Faixa_TipoComposicao
-ON faixa(tipo_de_composicao)
+ON faixa(cod_tipo_composicao)
 WITH FILLFACTOR = 100;
 
 
@@ -387,13 +387,13 @@ WITH FILLFACTOR = 100;
 create view visaoPlaylist
 with schemabinding
 as
-select
-    p.nome AS nomePlaylist,
-    COUNT(DISTINCT f.cod_album) AS albunsDiferentes
-from dbo.playlist p
-full join dbo.musica_playlist mp on mp.cod_playlist = p.cod_playlist
-full join dbo.faixa f on f.cod_musica = mp.cod_musica
-group by p.nome;
+    select
+        p.nome AS nomePlaylist,
+        COUNT(DISTINCT f.cod_album) AS albunsDiferentes
+    from dbo.playlist p
+    full join dbo.musica_playlist mp on mp.cod_playlist = p.cod_playlist
+    full join dbo.faixa f on f.cod_musica = mp.cod_musica
+    group by p.nome;
 
 -- Criar a indexação na visão materializada: Falhou
 create unique clustered index IX_PlaylistAlbumCountView
