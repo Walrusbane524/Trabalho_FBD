@@ -145,18 +145,12 @@ create table compositor_musica(
 	foreign key(cod_compositor) references compositor(cod_compositor)
 )
 
-create table usuario(
-    cod_usuario int primary key
-)
-
 create table playlist(
     cod_playlist int primary key,
     nome char(255),
     tempo_de_execucao_total time,
     data_criacao date,
-    cod_usuario int,
 
-    foreign key(cod_usuario) references usuario(cod_usuario)
 ) on terciario
 
 create table musica_playlist(
@@ -193,10 +187,8 @@ INSERT INTO periodo VALUES ('Periodo1', '2000-01-01', '2023-12-31', 'Descrição
 INSERT INTO compositor VALUES (1, 'Compositor1', '1980-01-01', '2022-12-31', 'LocalNascimento', 'Periodo1');
 -- Insert data into compositor_musica
 INSERT INTO compositor_musica VALUES (1, 1);
--- Insert data into usuario
-INSERT INTO usuario VALUES (1);
 -- Insert data into playlist
-INSERT INTO playlist VALUES (1, 'Playlist1', '00:30:00', '2023-01-01', 1);
+INSERT INTO playlist VALUES (1, 'Playlist1', '00:30:00', '2023-01-01');
 -- Insert data into musica_playlist
 INSERT INTO musica_playlist VALUES (1, 1, 5, '2023-01-15');
 -- Insert data into gravadora
@@ -223,10 +215,8 @@ INSERT INTO periodo VALUES ('Period of Innovation', '2005-01-01', '2023-12-31', 
 INSERT INTO compositor VALUES (503, 'Innovative Composer', '1985-03-15', NULL, 'Birthplace City', 'Period of Innovation');
 -- Insert data into compositor_musica
 INSERT INTO compositor_musica VALUES (502, 503);
--- Insert data into usuario
-INSERT INTO usuario VALUES (601);
 -- Insert data into playlist
-INSERT INTO playlist VALUES (701, 'Innovative Playlist', '01:15:00', '2023-02-01', 601);
+INSERT INTO playlist VALUES (701, 'Innovative Playlist', '01:15:00', '2023-02-01');
 -- Insert data into musica_playlist
 INSERT INTO musica_playlist VALUES (502, 701, 10, '2023-02-15');
 
