@@ -133,10 +133,13 @@ create table periodo(
 )
 
 create table musica_playlist(
-    cod_musica foreign key references faixa(cod_musica),
-    cod_playlist foreign key references playlist(cod_playlist),
+    cod_musica int,
+    cod_playlist int,
     numero_de_vezes_tocada int,
     ultima_vez_tocada date
+
+    foreign key(cod_musica)   references faixa(cod_musica)
+    foreign key(cod_playlist) references playlist(cod_playlist)
 ) on terciario
 
 create table playlist(
@@ -146,7 +149,7 @@ create table playlist(
     data_criacao date
     cod_usuario int,
 
-    foreign key(cod_usuario) references faixa(cod_musica)
+    foreign key(cod_usuario) references usuario(cod_usuario)
 ) on terciario
 
 create table usuario(
@@ -157,32 +160,49 @@ create table usuario(
 
 --Terceira condição:
 
-alter table album 
-add constraint tipoDaGravacaoBarroco
-check (cod_periodo = "Barroco" or not ("DDD" in (select tipo_gravacao from midia_musica m where m.cod_musica = cod_musica)))
-add constraint numeroMaximo
-check (
-    not exists (
-        select 1 
-        from faixa
-        inner join midia_musica on cod_musica
-        inner join midia_fisica on cod_meio
-        where cod_album = album.cod_album  --faixas com esse album
-        group by cod_album  -- agrega elas pelo codigo do album
-        having COUNT(*) > 64 -- vê se a quantidade de faixas desse album não excede 64
+
+create trigger condicaoAlbum on album
+before insert, update
+as 
+begin
+
+    if not (cod_periodo = "Barroco" or not ("DDD" in (select tipo_gravacao from midia_musica m where m.cod_musica = cod_musica)))
+    begin
+        raiseerror(" ")
+        rollback
+    end
+    if not (
+        not exists (
+            select 1 
+            from faixa
+            inner join midia_musica on cod_musica
+            inner join midia_fisica on cod_meio
+            where cod_album = album.cod_album  --faixas com esse album
+            group by cod_album                 -- agrega elas pelo codigo do album
+            having COUNT(*) > 64               -- vê se a quantidade de faixas desse album não excede 64
+        )
     )
-)
-add constraint precoJusto
-check (preco <= 3 * (
-    select avg(preco) 
-    from album 
-    where cod_album 
-    in (
-        select distinct cod_album 
-        from faixa 
-        where tipo_gravacao = 'DDD')
+    begin
+        raiseerror(" ")
+        rollback
+    end
+
+    if not (preco <= 3 * (
+        select avg(preco) 
+        from album 
+        where cod_album 
+        in (
+            select distinct cod_album 
+            from faixa 
+            where tipo_gravacao = 'DDD')
+        )
     )
-);
+    begin
+        raiseerror("Preço muito alto")
+        rollback
+    end
+
+end
 
 create trigger CdVinilDownload on midiaFisica
 before insert, update
@@ -246,38 +266,70 @@ end;
 --Quarta condição
 
 CREATE UNIQUE CLUSTERED INDEX IX_Faixa_CodigoAlbum
-ON Faixa(CodigoAlbum)
+ON faixa(cod_album)
 WITH FILLFACTOR = 100;
 
 
 CREATE NONCLUSTERED INDEX IX_Faixa_TipoComposicao
-ON Faixa(TipoComposicao)
+ON faixa(tipo_de_composicao)
 WITH FILLFACTOR = 100;
 
 
 --Quinta condição
 
+create table playlist(
+    cod_playlist primary key,
+    nome char(255),
+    tempo_de_execucao_total time,
+    data_criacao date
+    cod_usuario int,
+
+    foreign key(cod_usuario) references usuario(cod_usuario)
+) on terciario
+
+
+create table musica_playlist(
+    cod_musica int,
+    cod_playlist int,
+    numero_de_vezes_tocada int,
+    ultima_vez_tocada date
+
+    foreign key(cod_musica)   references faixa(cod_musica)
+    foreign key(cod_playlist) references playlist(cod_playlist)
+) on terciario
+
+
+create table faixa(
+    descricao varchar(255),
+    tempo_de_execucao time,
+    cod_musica int primary key,
+    cod_tipo_composicao int,
+    cod_gravadora int,
+    tipo_gravacao char(10),
+    cod_album int
+
+    foreign key(cod_tipo_composicao) references tipo_de_composicao(cod_tipo_composicao)
+    foreign key(cod_gravadora)       references gravadora(cod_gravadora)
+    foreign key(cod_album)           references album(cod_album) on delete cascade --Quando deletar o album deleta as suas faixas
+
+)
+
+
 -- Criar a visão materializada
-CREATE VIEW PlaylistAlbumCountView
-WITH SCHEMABINDING
-AS
-SELECT
-    p.Name AS PlaylistName,
-    COUNT(DISTINCT a.AlbumID) AS AlbumCount
-FROM
-    dbo.Playlist p
-JOIN
-    dbo.PlaylistTrack pt ON p.PlaylistID = pt.PlaylistID
-JOIN
-    dbo.Track t ON pt.TrackID = t.TrackID
-JOIN
-    dbo.Album a ON t.AlbumID = a.AlbumID
-GROUP BY
-    p.Name;
+create view visaoPlaylist
+with schemabinding
+as
+select
+    p.nome AS nome,
+    COUNT(DISTINCT f.cod_album) AS albunsDiferentes
+from playlist p
+inner join musica_playlist mp on cod_playlist
+inner join faixa f on cod_musica
+group by p.nome;
 
 -- Criar a indexação na visão materializada
-CREATE UNIQUE CLUSTERED INDEX IX_PlaylistAlbumCountView
-ON PlaylistAlbumCountView(PlaylistName);
+create unique clustered index IX_PlaylistAlbumCountView
+on visaoPlaylist(nome);
 
 
 --Sexta condição:
