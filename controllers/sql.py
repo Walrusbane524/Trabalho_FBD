@@ -1,9 +1,18 @@
-import psycopg2
+import pypyodbc
 
-def connect(dbname = "spotiper", user="spotiper", password="spotiper", host="localhost", port="5432"):
-    return psycopg2.connect(dbname="spotiper", user="spotiper", password="spotiper", host="localhost", port="5432")
+def connect(database="BDSpotPer", server="WALRUSBANE"):
+    DRIVER_NAME = "SQL SERVER"
+    connecion_string = f"""
+        DRIVER={{{DRIVER_NAME}}};
+        SERVER={server};
+        DATABASE={database};
+        Trust_Connection=yes;
+    """
+    return pypyodbc.connect(connecion_string)
+
 
 def select(conn, tables, columns = [], where_dict = {}):
+
     
     where_str = ", ".join(f"{key} = '{value}'" if isinstance(value, str) else f"{key} = {value}" for key, value in where_dict.items()) if where_dict != {} else ""
     columns_str = ", ".join(column for column in columns) if columns != [] else "*"
