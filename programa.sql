@@ -1,35 +1,34 @@
 CREATE DATABASE BDSpotPer
 ON PRIMARY
 (NAME = 'primarioUm',
-    FILENAME = 'C:\Caminho\Para\Arquivos\primarioUm.mdf',
-    SIZE = 500KB,
+    FILENAME = 'C:\Nova pasta\Trabalho_FBD\database\primarioUm.mdf',
+    SIZE = 5MB,
     MAXSIZE = 10MB,
     FILEGROWTH = 100%),
 FILEGROUP secundario
 (NAME = 'secundarioUm',
-    FILENAME = 'C:\Caminho\Para\Arquivos\secundarioUm.ndf',
-    SIZE = 250KB,
+    FILENAME = 'C:\Nova pasta\Trabalho_FBD\database\secundarioUm.ndf',
+    SIZE = 1MB,
     MAXSIZE = 10MB,
     FILEGROWTH = 100%),
 (NAME = 'secundarioDois',
-    FILENAME = 'C:\Caminho\Para\Arquivos\secundarioDois.ndf',
-    SIZE = 250KB,
+    FILENAME = 'C:\Nova pasta\Trabalho_FBD\database\secundarioDois.ndf',
+    SIZE = 1MB,
     MAXSIZE = 10MB,
     FILEGROWTH = 100%),
 FILEGROUP terciario
 (NAME = 'terciario',
-    FILENAME = 'C:\Caminho\Para\Arquivos\terciario.ndf',
-    SIZE = 250KB,
+    FILENAME = 'C:\Nova pasta\Trabalho_FBD\database\terciario.ndf',
+    SIZE = 1MB,
     MAXSIZE = 10MB,
-    FILEGROWTH = 100%),
+    FILEGROWTH = 100%)
 LOG ON
 (NAME = 'Log',
-    FILENAME = 'C:\Caminho\Para\Arquivos\Log.ldf',
+    FILENAME = 'C:\Nova pasta\Trabalho_FBD\database\Log.ldf',
     SIZE = 1MB,
     MAXSIZE = 100MB,
-    FILEGROWTH = 100%);
+    FILEGROWTH = 100%)
 
--- Definir o filegroup padrão para objetos
 ALTER DATABASE BDSpotPer
 MODIFY FILEGROUP secundario DEFAULT;
 
@@ -49,7 +48,9 @@ create table album(
     preco decimal(10,2),
     data_de_gravacao date, --Posterior a 2000
     data_da_compra date,
-    cod_gravadora foreign key references gravadora(cod_gravadora)
+    cod_gravadora int
+
+	foreign key(cod_gravadora) references gravadora(cod_gravadora)
 
     constraint dataDepois2000 check (data_de_gravacao > '2000-01-01')
 )
@@ -65,15 +66,6 @@ create table midiaFisica(
     foreign key(cod_album) references album(cod_album) on delete cascade
 )
 
-create table midia_musica(
-    cod_meio int,
-    cod_musica int,
-    numeroFaixa int
-
-    foreign key(cod_meio)   references midiaFisica(cod_meio),
-    foreign key(cod_musica) references faixa(cod_musica) on delete cascade
-)
-
 create table telefones(
     cod_telefone int primary key,
     telefone int
@@ -82,18 +74,13 @@ create table telefones(
 
 create table tipo_de_composicao(
     descricao varchar(255),
-    cod_tipo_composicao int
+    cod_tipo_composicao int primary key
 )
 
 create table interprete(
     cod_interprete int primary key,
     nome varchar(255),
     tipo int
-)
-
-create table interprete_musica(
-    cod_interprete foreign key references interprete(cod_interprete),
-    ocd_musica foreign key references faixa(cod_musica)
 )
 
 create table faixa(
@@ -105,25 +92,31 @@ create table faixa(
     tipo_gravacao char(10),
     cod_album int
 
-    foreign key(cod_tipo_composicao) references tipo_de_composicao(cod_tipo_composicao)
-    foreign key(cod_gravadora)       references gravadora(cod_gravadora)
+    foreign key(cod_tipo_composicao) references tipo_de_composicao(cod_tipo_composicao),
+    foreign key(cod_gravadora)       references gravadora(cod_gravadora),
     foreign key(cod_album)           references album(cod_album) on delete cascade --Quando deletar o album deleta as suas faixas
 
 ) on terciario
 
-create table compositor_musica(
-    cod_musica foreign key references faixa(cod_musica),
-    cod_compositor foreign key references compositor(cod_compositor)
+
+create table interprete_musica(
+    cod_interprete int, 
+    cod_musica int ,
+
+	foreign key(cod_interprete) references interprete(cod_interprete),
+	foreign key(cod_musica) references faixa(cod_musica)
 )
 
-create table compositor(
-    cod_compositor primary key,
-    nome char(255),
-    data_de_nascimento date,
-    data_de_falecimento date,
-    local_nascimento char(255),
-    cod_periodo foreign key references periodo(cod_periodo)
+
+create table midia_musica(
+    cod_meio int,
+    cod_musica int,
+    numeroFaixa int
+
+    foreign key(cod_meio)   references midiaFisica(cod_meio),
+    foreign key(cod_musica) references faixa(cod_musica) on delete cascade
 )
+
 
 create table periodo(
     cod_periodo varchar(255) primary key,
@@ -131,6 +124,40 @@ create table periodo(
     fim date,
     descricao varchar(255)
 )
+
+create table compositor(
+    cod_compositor int primary key,
+    nome char(255),
+    data_de_nascimento date,
+    data_de_falecimento date,
+    local_nascimento char(255),
+    cod_periodo varchar(255),
+
+	foreign key(cod_periodo) references periodo(cod_periodo)
+)
+
+
+create table compositor_musica(
+    cod_musica int, 
+    cod_compositor int,
+
+	foreign key(cod_musica) references faixa(cod_musica),
+	foreign key(cod_compositor) references compositor(cod_compositor)
+)
+
+create table usuario(
+    cod_usuario int primary key
+)
+
+create table playlist(
+    cod_playlist int primary key,
+    nome char(255),
+    tempo_de_execucao_total time,
+    data_criacao date,
+    cod_usuario int,
+
+    foreign key(cod_usuario) references usuario(cod_usuario)
+) on terciario
 
 create table musica_playlist(
     cod_musica int,
@@ -142,20 +169,8 @@ create table musica_playlist(
     foreign key(cod_playlist) references playlist(cod_playlist)
 ) on terciario
 
-create table playlist(
-    cod_playlist primary key,
-    nome char(255),
-    tempo_de_execucao_total time,
-    data_criacao date
-    cod_usuario int,
 
-    foreign key(cod_usuario) references usuario(cod_usuario)
-) on terciario
-
-create table usuario(
-    cod_usuario primary key
-)
-
+insert into gravadora values(1, 'www.nuclearRecords.com.com.com.com.br', 'Suécia', 'NuclearRecords');
 
 
 --Terceira condição:

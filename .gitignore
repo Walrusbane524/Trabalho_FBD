@@ -1,1 +1,6 @@
 __pycache__
+database/Log.ldf
+database/primarioUm.mdf
+database/secundarioDois.ndf
+database/secundarioUm.ndf
+database/terciario.ndf
