@@ -269,6 +269,55 @@ begin
 end
 
 --Consertado
+create trigger barroco on album 
+for insert, update
+as
+begin
+
+    --Contrapositiva
+	--Não pode existir uma faixa do album onde seu período é barroco e sua gravação não é ddd
+    if exists (
+	
+		select c.cod_periodo, f.tipo_gravacao from inserted i
+		inner join faixa f on f.cod_album = i.cod_album
+		inner join compositor_musica cm on cm.cod_musica = f.cod_musica
+		inner join compositor c on c.cod_compositor = cm.cod_compositor
+		where
+		(
+			c.cod_periodo = 'Barroco'
+			and not 
+			f.tipo_gravacao = 'DDD'
+		)
+	)
+    begin
+		raiserror('Erro período barroco',2,2,2);
+        rollback;
+    end
+end
+
+alter trigger condicaoAlbum on album
+for insert, update
+as 
+begin
+	
+	
+	if exists (
+            select 1
+            from faixa f
+            inner join midia_musica mm on mm.cod_musica = f.cod_musica
+            inner join midia_fisica mf on mf.cod_meio   = mm.cod_meio
+			inner join inserted i      on i.cod_album = f.cod_album
+            group by cod_album                 -- agrega elas pelo codigo do album
+            having COUNT(*) > 64               -- vê se a quantidade de faixas desse album não excede 64
+        )
+    begin
+        raiserror('Limite de 64 faixas por album excedido',2,2,2);
+        rollback
+    end
+    
+end
+
+--Consertado
 create trigger CdVinilDownload on midiaFisica
 for insert, update
 as
