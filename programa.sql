@@ -338,29 +338,33 @@ begin
     
 end;
 
-create trigger tipoGravacao on midia_musica
-before insert, update
+--Consertado
+create trigger tipoGravacao on faixa
+for insert, update
 as
 begin
 
-    declare @meio char(10);
-    declare @gravacao char(10) = null;
+    declare @meio table(tipo char(20))
+    declare @gravacao table(tipo_gravacao char(10));
 
-    select @meio = tipo 
-    from midia_fisica 
-    where cod_meio = inserted.cod_meio
+    insert into @meio select tipo 
+    from midiaFisica m
+	inner join midia_musica mm on m.cod_meio = mm.cod_meio
+	where cod_musica in (select cod_musica from inserted)
 
-    select @gravacao = tipo_gravacao 
-    from faixa
-    where cod_musica = inserted.cod_musica
 
-    --Se o tipo for cd e não tiver gravação dá erro
-    --Se o tipo não for cd e tiver gravação dá erro
-    if ((tipo = "CD" and gravacao is null) or (gravacao is not null))
-    begin
-        RAISEERROR('Falha, tipo de gravação e meio físico incompatíveis');
-        rollback;
-    end
+    insert into @gravacao select tipo_gravacao 
+    from inserted
+
+	if exists( 
+		select * from @meio, @gravacao
+		where (tipo = 'CD' and tipo_gravacao is null) or (tipo_gravacao is not null)
+	)
+	begin
+		raiserror('CD com gravação nula ou Vinil/download com gravação: INVALIDO',2,2,2);
+		rollback
+	end
+
     
 end;
 
