@@ -224,50 +224,6 @@ INSERT INTO musica_playlist VALUES (502, 701, 10, '2023-02-15');
 
 --Terceira condição:
 
-
-create trigger condicaoAlbum on album
-before insert, update
-as 
-begin
-
-    if not (cod_periodo = "Barroco" or not ("DDD" in (select tipo_gravacao from midia_musica m where m.cod_musica = cod_musica)))
-    begin
-        raiserror("Erro do periodo barroco")
-        rollback
-    end
-    if not (
-        not exists (
-            select 1 
-            from faixa
-            inner join midia_musica on cod_musica
-            inner join midia_fisica on cod_meio
-            where cod_album = album.cod_album  --faixas com esse album
-            group by cod_album                 -- agrega elas pelo codigo do album
-            having COUNT(*) > 64               -- vê se a quantidade de faixas desse album não excede 64
-        )
-    )
-    begin
-        raiseerror("Limite de 64 faixas por album excedido")
-        rollback
-    end
-
-    if not (preco <= 3 * (
-        select avg(preco) 
-        from album 
-        where cod_album 
-        in (
-            select distinct cod_album 
-            from faixa 
-            where tipo_gravacao = 'DDD')
-        )
-    )
-    begin
-        raiseerror("Preço muito alto")
-        rollback
-    end
-
-end
-
 --Consertado
 create trigger barroco on album 
 for insert, update
@@ -295,7 +251,33 @@ begin
     end
 end
 
-alter trigger condicaoAlbum on album
+--Consertado
+alter trigger precoAlto on album 
+for insert, update
+as
+begin
+	
+	--Se existir algum album dos inseridos onde seu preço é maior que todos vezes 3, rejeitar
+    if exists(
+		select * from inserted  where 
+		preco >
+			(select 3 * avg(preco) 
+			from album
+			where cod_album 
+			in (
+				select distinct cod_album 
+				from faixa 
+				where tipo_gravacao = 'DDD'
+			))
+    )
+    begin
+        raiserror('Preço muito alto',2,2,2);
+        rollback
+    end
+end
+
+--Consertado
+create trigger limiteTamanho on album
 for insert, update
 as 
 begin
