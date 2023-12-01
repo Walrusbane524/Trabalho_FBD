@@ -388,11 +388,11 @@ create view visaoPlaylist
 with schemabinding
 as
 select
-    p.nome AS nome,
+    p.nome AS nomePlaylist,
     COUNT(DISTINCT f.cod_album) AS albunsDiferentes
-from playlist p
-inner join musica_playlist mp on cod_playlist
-inner join faixa f on cod_musica
+from dbo.playlist p
+full join dbo.musica_playlist mp on mp.cod_playlist = p.cod_playlist
+full join dbo.faixa f on f.cod_musica = mp.cod_musica
 group by p.nome;
 
 -- Criar a indexação na visão materializada
