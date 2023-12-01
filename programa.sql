@@ -1,33 +1,33 @@
 CREATE DATABASE BDSpotPer
 ON PRIMARY
-(NAME = 'BDSpotPer_Primary',
-    FILENAME = 'C:\Caminho\Para\Arquivos\BDSpotPer_Primary.mdf',
-    SIZE = 100MB,
-    MAXSIZE = UNLIMITED,
-    FILEGROWTH = 10MB),
+(NAME = 'primarioUm',
+    FILENAME = 'C:\Caminho\Para\Arquivos\primarioUm.mdf',
+    SIZE = 500KB,
+    MAXSIZE = 10MB,
+    FILEGROWTH = 100%),
 FILEGROUP secundario
-(NAME = 'BDSpotPer_Secondary1_1',
-    FILENAME = 'C:\Caminho\Para\Arquivos\BDSpotPer_Secondary1_1.ndf',
-    SIZE = 50MB,
-    MAXSIZE = UNLIMITED,
-    FILEGROWTH = 5MB),
-(NAME = 'BDSpotPer_Secondary1_2',
-    FILENAME = 'C:\Caminho\Para\Arquivos\BDSpotPer_Secondary1_2.ndf',
-    SIZE = 50MB,
-    MAXSIZE = UNLIMITED,
-    FILEGROWTH = 5MB),
+(NAME = 'secundarioUm',
+    FILENAME = 'C:\Caminho\Para\Arquivos\secundarioUm.ndf',
+    SIZE = 250KB,
+    MAXSIZE = 10MB,
+    FILEGROWTH = 100%),
+(NAME = 'secundarioDois',
+    FILENAME = 'C:\Caminho\Para\Arquivos\secundarioDois.ndf',
+    SIZE = 250KB,
+    MAXSIZE = 10MB,
+    FILEGROWTH = 100%),
 FILEGROUP terciario
-(NAME = 'BDSpotPer_Secondary2_1',
-    FILENAME = 'C:\Caminho\Para\Arquivos\BDSpotPer_Secondary2_1.ndf',
-    SIZE = 100MB,
-    MAXSIZE = UNLIMITED,
-    FILEGROWTH = 10MB),
+(NAME = 'terciario',
+    FILENAME = 'C:\Caminho\Para\Arquivos\terciario.ndf',
+    SIZE = 250KB,
+    MAXSIZE = 10MB,
+    FILEGROWTH = 100%),
 LOG ON
-(NAME = 'BDSpotPer_Log',
-    FILENAME = 'C:\Caminho\Para\Arquivos\BDSpotPer_Log.ldf',
-    SIZE = 50MB,
+(NAME = 'Log',
+    FILENAME = 'C:\Caminho\Para\Arquivos\Log.ldf',
+    SIZE = 1MB,
     MAXSIZE = 100MB,
-    FILEGROWTH = 10MB);
+    FILEGROWTH = 100%);
 
 -- Definir o filegroup padrão para objetos
 ALTER DATABASE BDSpotPer
@@ -168,7 +168,7 @@ begin
 
     if not (cod_periodo = "Barroco" or not ("DDD" in (select tipo_gravacao from midia_musica m where m.cod_musica = cod_musica)))
     begin
-        raiseerror(" ")
+        raiseerror("Erro do periodo barroco")
         rollback
     end
     if not (
@@ -183,7 +183,7 @@ begin
         )
     )
     begin
-        raiseerror(" ")
+        raiseerror("Limite de 64 faixas por album excedido")
         rollback
     end
 
@@ -277,43 +277,6 @@ WITH FILLFACTOR = 100;
 
 --Quinta condição
 
-create table playlist(
-    cod_playlist primary key,
-    nome char(255),
-    tempo_de_execucao_total time,
-    data_criacao date
-    cod_usuario int,
-
-    foreign key(cod_usuario) references usuario(cod_usuario)
-) on terciario
-
-
-create table musica_playlist(
-    cod_musica int,
-    cod_playlist int,
-    numero_de_vezes_tocada int,
-    ultima_vez_tocada date
-
-    foreign key(cod_musica)   references faixa(cod_musica)
-    foreign key(cod_playlist) references playlist(cod_playlist)
-) on terciario
-
-
-create table faixa(
-    descricao varchar(255),
-    tempo_de_execucao time,
-    cod_musica int primary key,
-    cod_tipo_composicao int,
-    cod_gravadora int,
-    tipo_gravacao char(10),
-    cod_album int
-
-    foreign key(cod_tipo_composicao) references tipo_de_composicao(cod_tipo_composicao)
-    foreign key(cod_gravadora)       references gravadora(cod_gravadora)
-    foreign key(cod_album)           references album(cod_album) on delete cascade --Quando deletar o album deleta as suas faixas
-
-)
-
 
 -- Criar a visão materializada
 create view visaoPlaylist
@@ -335,23 +298,17 @@ on visaoPlaylist(nome);
 --Sexta condição:
 
 -- Criar a função
-CREATE FUNCTION ObterAlbumsPorCompositor
+create function ObterAlbumsPorCompositor
 (
-    @NomeCompositor NVARCHAR(255)
+    @NomeCompositor char(255)
 )
-RETURNS TABLE
-AS
-RETURN
+returns table
+as
+return
 (
-    SELECT DISTINCT
-        a.AlbumID,
-        a.Nome AS AlbumNome,
-        a.Artista,
-        a.AnoLancamento
-    FROM
-        Album a
-    JOIN
-        Faixa f ON a.AlbumID = f.AlbumID
-    WHERE
-        f.Compositor LIKE '%' + @NomeCompositor + '%'
+    select * from album 
+    inner join faixa on cod_musica
+    inner join compositor_musica on cod_musica
+    inner join compositor c on cod_compositor
+    where c.nome like '%' + @NomeCompositor + '%'
 );
