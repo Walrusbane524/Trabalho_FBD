@@ -232,7 +232,7 @@ begin
 
     if not (cod_periodo = "Barroco" or not ("DDD" in (select tipo_gravacao from midia_musica m where m.cod_musica = cod_musica)))
     begin
-        raiseerror("Erro do periodo barroco")
+        raiserror("Erro do periodo barroco")
         rollback
     end
     if not (
@@ -268,36 +268,42 @@ begin
 
 end
 
+--Consertado
 create trigger CdVinilDownload on midiaFisica
-before insert, update
+for insert, update
 as
 begin
     --Se já existir um meio físico para esse album e ele for download
     --então ele não permite adicionar
     --Caso ele seja cd ou vinil, permite somente se for o mesmo tipo
     if exists (
-        select * from midiaFisica 
-        where cod_album = inserted.cod_album and (tipo = "download" or tipo != inserted.tipo)
+        select * from midiaFisica m inner join inserted i on m.cod_album = i.cod_album
+        where (m.tipo = 'download' or i.tipo != m.tipo)
     )
     begin
-        RAISEERROR('Inserção falha, meio físico incompativel');
+		raiserror('Inserção falha, meio físico incompativel',2,2,2);
         rollback;
     end
 end;
 
+
+--Consertado
 create trigger deletarMeioFisico on faixa
-before delete
+for delete
 as
 begin
     --Se o meio dessa musica que foi deletada tiver apenas ela como musica
     --Deletar esse meio
     delete from midiaFisica 
-    where cod_meio in
-
-    (select cod_meio from midiaFisica 
-    inner join midia_musica on cod_meio
-    where cod_musica = deleted.cod_musica and count(*) = 1
-    group by cod_meio)
+    where cod_meio in 
+	
+	
+	(select MF.cod_meio from midiaFisica MF 
+    inner join midia_musica MM on MF.cod_meio = MM.cod_meio
+    where MM.cod_musica IN (SELECT cod_musica FROM deleted)
+    group by MF.cod_meio
+	having (count(*) > 0)
+	)
     
 end;
 
