@@ -47,22 +47,31 @@ create table album(
     cod_album int primary key,
     tipo int, 
     preco decimal(10,2),
-    data_de_gravacao date,
+    data_de_gravacao date, --Posterior a 2000
     data_da_compra date,
     cod_gravadora foreign key references gravadora(cod_gravadora)
+
+    constraint dataDepois2000 check (data_de_gravacao > '2000-01-01')
 )
 
 create table midiaFisica(
     cod_meio int primary key,
-    tipo int,
-    cod_album foreign key references album(cod_album)
+    tipo char(20),
+    cod_album int,
+
+    --tem um trigger para lidar com o caso de ser cd ou vinil e poder adicionar vários
+    
+    --Quando o album é deletado, a midia física também é
+    foreign key(cod_album) references album(cod_album) on delete cascade
 )
 
 create table midia_musica(
-    cod_meio foreign key references midiaFisica(cod_meio),
-    cod_musica foreign key references faixa(cod_musica),
-    tipo_gravacao char(10),
+    cod_meio int,
+    cod_musica int,
     numeroFaixa int
+
+    foreign key(cod_meio)   references midiaFisica(cod_meio),
+    foreign key(cod_musica) references faixa(cod_musica) on delete cascade
 )
 
 create table telefones(
@@ -91,8 +100,14 @@ create table faixa(
     descricao varchar(255),
     tempo_de_execucao time,
     cod_musica int primary key,
-    cod_tipo_composicao foreign key references tipo_de_composicao(cod_tipo_composicao)
-    cod_gravadora foreign key references gravadora(cod_gravadora),
+    cod_tipo_composicao int,
+    cod_gravadora int,
+    tipo_gravacao char(10),
+    cod_album int
+
+    foreign key(cod_tipo_composicao) references tipo_de_composicao(cod_tipo_composicao)
+    foreign key(cod_gravadora)       references gravadora(cod_gravadora)
+    foreign key(cod_album)           references album(cod_album) on delete cascade --Quando deletar o album deleta as suas faixas
 
 ) on terciario
 
@@ -129,7 +144,9 @@ create table playlist(
     nome char(255),
     tempo_de_execucao_total time,
     data_criacao date
-    cod_usuario foreign key references usuario(cod_usuario)
+    cod_usuario int,
+
+    foreign key(cod_usuario) references faixa(cod_musica)
 ) on terciario
 
 create table usuario(
@@ -167,9 +184,64 @@ check (preco <= 3 * (
     )
 );
 
+create trigger CdVinilDownload on midiaFisica
+before insert, update
+as
+begin
+    --Se já existir um meio físico para esse album e ele for download
+    --então ele não permite adicionar
+    --Caso ele seja cd ou vinil, permite somente se for o mesmo tipo
+    if exists (
+        select * from midiaFisica 
+        where cod_album = inserted.cod_album and (tipo = "download" or tipo != inserted.tipo)
+    )
+    begin
+        RAISEERROR('Inserção falha, meio físico incompativel');
+        rollback;
+    end
+end;
 
+create trigger deletarMeioFisico on faixa
+before delete
+as
+begin
+    --Se o meio dessa musica que foi deletada tiver apenas ela como musica
+    --Deletar esse meio
+    delete from midiaFisica 
+    where cod_meio in
 
---faixa tem um relacionamento fraco com album
+    (select cod_meio from midiaFisica 
+    inner join midia_musica on cod_meio
+    where cod_musica = deleted.cod_musica and count(*) = 1
+    group by cod_meio)
+    
+end;
+
+create trigger tipoGravacao on midia_musica
+before insert, update
+as
+begin
+
+    declare @meio char(10);
+    declare @gravacao char(10) = null;
+
+    select @meio = tipo 
+    from midia_fisica 
+    where cod_meio = inserted.cod_meio
+
+    select @gravacao = tipo_gravacao 
+    from faixa
+    where cod_musica = inserted.cod_musica
+
+    --Se o tipo for cd e não tiver gravação dá erro
+    --Se o tipo não for cd e tiver gravação dá erro
+    if ((tipo = "CD" and gravacao is null) or (gravacao is not null))
+    begin
+        RAISEERROR('Falha, tipo de gravação e meio físico incompatíveis');
+        rollback;
+    end
+    
+end;
 
 --Quarta condição
 
