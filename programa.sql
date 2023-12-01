@@ -222,7 +222,7 @@ INSERT INTO musica_playlist VALUES (502, 701, 10, '2023-02-15');
 
 
 
---Terceira condição:
+--Terceira condição: Sucesso
 
 --Consertado
 create trigger barroco on album 
@@ -368,7 +368,7 @@ begin
     
 end;
 
---Quarta condição
+--Quarta condição: Falhou
 
 CREATE UNIQUE CLUSTERED INDEX IX_Faixa_CodigoAlbum
 ON faixa(cod_album)
@@ -380,7 +380,7 @@ ON faixa(tipo_de_composicao)
 WITH FILLFACTOR = 100;
 
 
---Quinta condição
+--Quinta condição: Sucesso
 
 
 -- Criar a visão materializada
@@ -395,14 +395,15 @@ full join dbo.musica_playlist mp on mp.cod_playlist = p.cod_playlist
 full join dbo.faixa f on f.cod_musica = mp.cod_musica
 group by p.nome;
 
--- Criar a indexação na visão materializada
+-- Criar a indexação na visão materializada: Falhou
 create unique clustered index IX_PlaylistAlbumCountView
 on visaoPlaylist(nome);
 
 
---Sexta condição:
+--Sexta condição: Sucesso
 
 -- Criar a função
+
 create function ObterAlbumsPorCompositor
 (
     @NomeCompositor char(255)
@@ -411,9 +412,9 @@ returns table
 as
 return
 (
-    select * from album 
-    inner join faixa on cod_musica
-    inner join compositor_musica on cod_musica
-    inner join compositor c on cod_compositor
+    select c.nome from album a
+    inner join faixa f on f.cod_album = a.cod_album
+    inner join compositor_musica cm on f.cod_musica = cm.cod_musica
+    inner join compositor c on c.cod_compositor = cm.cod_compositor
     where c.nome like '%' + @NomeCompositor + '%'
 );
