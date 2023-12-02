@@ -91,7 +91,7 @@ VALUES
   (3, 'Michael Harmony', '1968-02-10', '2022-06-30', 'City3, Country3', 'P3'),
   (4, 'Sarah Composer', '1990-11-20', NULL, 'City4, Country4', 'P4'),
   (5, 'Daniel Tunebuilder', '1975-04-03', NULL, 'City5, Country5', 'P5'),
-  (6, 'Laura Rhythmcraft', '1980-09-18', NULL, 'City6, Country6', 'P6'),
+--   (6, 'Laura Rhythmcraft', '1980-09-18', NULL, 'City6, Country6', 'P6'),
   (7, 'Alex Beatweaver', '1963-12-25', '2021-03-15', 'City7, Country7', 'P7'),
   (8, 'Olivia Noteartist', '1995-06-08', NULL, 'City8, Country8', 'P8'),
   (9, 'William Serenademaker', '1978-01-30', NULL, 'City9, Country9', 'P9'),
@@ -173,49 +173,6 @@ VALUES
 
 -- Insert data into musica_playlist table with cod_musica values from 50 to 70
 -- Insert data into musica_playlist table with cod_musica values from 50 to 70 and cod_playlist values looping from 1 to 10
-INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
-VALUES
-  (50, 1, 5, '2023-05-15'),
-  (51, 2, 8, '2023-05-17'),
-  (52, 3, 3, '2023-05-20'),
-  (53, 4, 10, '2023-05-22'),
-  (54, 5, 6, '2023-05-25'),
-  (55, 6, 12, '2023-05-28'),
-  (56, 7, 7, '2023-06-01'),
-  (57, 8, 4, '2023-06-03'),
-  (58, 9, 9, '2023-06-06'),
-  (59, 10, 5, '2023-06-08'),
-  (60, 1, 6, '2023-06-11'),
-  (61, 2, 11, '2023-06-14'),
-  (62, 3, 8, '2023-06-17'),
-  (63, 4, 3, '2023-06-20'),
-  (64, 5, 9, '2023-06-23'),
-  (65, 6, 7, '2023-06-26'),
-  (66, 7, 4, '2023-06-29'),
-  (67, 8, 6, '2023-07-02'),
-  (68, 9, 10, '2023-07-05'),
-  (69, 10, 8, '2023-07-08'),
-  (70, 1, 5, '2023-07-11'),
-  (50, 2, 12, '2023-07-14'),
-  (51, 3, 7, '2023-07-17'),
-  (52, 4, 9, '2023-07-20'),
-  (53, 5, 6, '2023-07-23'),
-  (54, 6, 11, '2023-07-26'),
-  (55, 7, 8, '2023-07-29'),
-  (56, 8, 4, '2023-08-01'),
-  (57, 9, 9, '2023-08-04'),
-  (58, 10, 7, '2023-08-07'),
-  (59, 1, 5, '2023-08-10'),
-  (60, 2, 10, '2023-08-13'),
-  (61, 3, 8, '2023-08-16'),
-  (62, 4, 3, '2023-08-19'),
-  (63, 5, 6, '2023-08-22'),
-  (64, 6, 11, '2023-08-25'),
-  (65, 7, 9, '2023-08-28'),
-  (66, 8, 4, '2023-08-31'),
-  (67, 9, 7, '2023-09-03'),
-  (68, 10, 10, '2023-09-06');
-
 -- Insert data into musica_playlist table with cod_musica values from 50 to 70 and cod_playlist values looping from 1 to 10
 INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
 VALUES
@@ -241,8 +198,6 @@ VALUES
   (51, 10, 8, '2023-05-17'),
   (50, 1, 5, '2023-05-15')
 
-  -- Insert data into midia_musica table with cod_musica values from 50 to 70 and cod_meio values looping from 1 to 10
--- Insert data into midia_musica table with cod_musica values from 70 to 50 and unique cod_meio values
 INSERT INTO midia_musica (cod_musica, cod_meio, numeroFaixa)
 VALUES
   (70, 1, 1),
@@ -264,10 +219,57 @@ VALUES
   (54, 7, 7),
   (53, 8, 8),
   (52, 9, 9),
-  (51, 10, 10),
-  (50, 1, 1)
+  (51, 10, 10)
+  
 
+  -- Insert data into musica_playlist table with cod_musica values from 70 to 50 and unique cod_playlist values
+INSERT INTO interprete_musica (cod_musica, cod_interprete)
+VALUES
+  (70, 1),
+  (69, 2),
+  (68, 3),
+  (67, 4),
+  (66, 5),
+  (65, 6),
+  (64, 7),
+  (63, 8),
+  (62, 9),
+  (61, 10),
+  (60, 1),
+  (59, 2),
+  (58, 3),
+  (57, 4),
+  (56, 5),
+  (55, 6),
+  (54, 7),
+  (53, 8),
+  (52, 9),
+  (51, 10)
 
+  -- Insert data into midia_musica table with cod_musica values from 50 to 70 and cod_meio values looping from 1 to 10
+-- Insert data into midia_musica table with cod_musica values from 70 to 50 and unique cod_meio values
+INSERT INTO compositor_musica (cod_musica, cod_compositor)
+VALUES
+  (70, 1),
+  (69, 2),
+  (68, 3),
+  (67, 4),
+  (66, 5),
+  (65, 6),
+  (64, 7),
+  (63, 8),
+  (62, 9),
+  (61, 10),
+  (60, 1),
+  (59, 2),
+  (58, 3),
+  (57, 4),
+  (56, 5),
+  (55, 6),
+  (54, 7),
+  (53, 8),
+  (52, 9),
+  (51, 10),
 
 
 INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)

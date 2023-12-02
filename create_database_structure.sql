@@ -6,12 +6,12 @@ create table gravadora(
     Endereco_homepage varchar(255),
     Endereco varchar(255),
     nome varchar(255),
-    telefone char(20)
+    telefone varchar(20)
 )
 
 create table album(
     cod_album int primary key,
-    tipoCompra char(20), 
+    tipoCompra varchar(20), 
     preco decimal(10,2),
     data_de_gravacao date check (data_de_gravacao > '2000-01-01'), --Posterior a 2000
     data_da_compra date,
@@ -22,7 +22,7 @@ create table album(
 
 create table midiaFisica(
     cod_meio int primary key,
-    tipo char(20),
+    tipo varchar(20),
     cod_album int,
 
     --tem um trigger para lidar com o caso de ser cd ou vinil e poder adicionar vários
@@ -31,7 +31,7 @@ create table midiaFisica(
     foreign key(cod_album) references album(cod_album) on delete cascade
 )
 create table tipo_de_composicao(
-    cod_tipo_composicao char(20) primary key,
+    cod_tipo_composicao varchar(20) primary key,
     descricao varchar(255)
 )
 
@@ -45,8 +45,8 @@ create table faixa(
     cod_musica int primary key,
     descricao varchar(255),
     tempo_de_execucao time,
-    cod_tipo_composicao char(20),
-    tipo_gravacao char(10),
+    cod_tipo_composicao varchar(20),
+    tipo_gravacao varchar(10),
     cod_gravadora int,
     cod_album int
 
@@ -88,7 +88,7 @@ create table compositor(
     nome varchar(255),
     data_de_nascimento date,
     data_de_falecimento date,
-    local_nascimento char(255),
+    local_nascimento varchar(255),
     cod_periodo varchar(255),
 
 	foreign key(cod_periodo) references periodo(cod_periodo)
@@ -243,8 +243,8 @@ for insert, update
 as
 begin
 
-    declare @meio table(tipo char(20))
-    declare @gravacao table(tipo_gravacao char(10));
+    declare @meio table(tipo varchar(20))
+    declare @gravacao table(tipo_gravacao varchar(10));
 
     insert into @meio select tipo 
     from midiaFisica m
@@ -345,7 +345,7 @@ select
 
 create function ObterAlbumsPorCompositor
 (
-    @NomeCompositor char(255)
+    @NomeCompositor varchar(255)
 )
 returns table
 as
