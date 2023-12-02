@@ -193,10 +193,8 @@ begin
 	if exists (
             select 1
             from faixa f
-            inner join midia_musica mm on mm.cod_musica = f.cod_musica
-            inner join midia_fisica mf on mf.cod_meio   = mm.cod_meio
-			inner join inserted i      on i.cod_album = f.cod_album
-            group by cod_album                 -- agrega elas pelo codigo do album
+			inner join inserted i  on i.cod_album = f.cod_album
+            group by f.cod_album                 -- agrega elas pelo codigo do album
             having COUNT(*) > 64               -- vê se a quantidade de faixas desse album não excede 64
         )
     begin
@@ -294,17 +292,21 @@ WITH FILLFACTOR = 100;
 create view visaoPlaylist
 with schemabinding
 as
-    select
-        p.nome AS nomePlaylist,
-        COUNT(DISTINCT f.cod_album) AS albunsDiferentes
-    from dbo.playlist p
-    full join dbo.musica_playlist mp on mp.cod_playlist = p.cod_playlist
-    full join dbo.faixa f on f.cod_musica = mp.cod_musica
-    group by p.nome;
+select
+    p.nome as nomePlaylist,
+    COUNT(distinct f.cod_album) as albunsDiferentes
+from dbo.playlist p
+join dbo.musica_playlist mp on mp.cod_playlist = p.cod_playlist
+join dbo.faixa f on f.cod_musica = mp.cod_musica
+group by p.nome
 
--- Criar a indexação na visão materializada: Falhou
-create unique clustered index IX_PlaylistAlbumCountView
-on visaoPlaylist(nome);
+union 
+
+select --União com as playlists que não tem músicas
+	p.nome as nomePlaylist,
+	0 as albunsDiferentes
+from dbo.playlist p
+where not exists( select * from dbo.musica_playlist mp where mp.cod_playlist = p.cod_playlist)
 
 
 --Sexta condição: Sucesso
@@ -325,3 +327,66 @@ return
     inner join compositor c on c.cod_compositor = cm.cod_compositor
     where c.nome like '%' + @NomeCompositor + '%'
 );
+
+
+--Setima condição: Pesquisa da database
+
+
+--i)
+create view mostrarAlbunsComFaixas
+as
+select * from album join faixa on faixa.cod_album = album.cod_album
+
+--ii)
+create view mostrarPlaylistsComMusicas
+as
+select * from playlist 
+full join musica_playlist 
+on playlist.cod_playlist = musica_playlist.cod_playlist
+left outer join faixa 
+on faixa.cod_musica = musica_playlist.cod_musica
+
+
+create procedure inserirMusica
+(
+    @playlistCodigo int,
+    @musicaInserida int
+)
+as
+begin
+    insert into musica_playlist values(@musicaInserida, @playlistCodigo, 0, null)
+end
+
+create procedure removerMusica
+(
+    @playlistCodigo int,
+    @musicaInserida int
+)
+as
+begin
+    delete from musica_playlist where cod_playlist = @playlistCodigo and @musicaInserida =cod_musica
+end
+
+--iii)
+
+--a)
+
+--Meio que uma gambiarra, mas evita de repetir a query (select avg(preco) from album) cada vez
+create view albumsCaros
+as
+select * from album album
+join (select avg(preco) from album) medio 
+where album.preco > medio.preco
+
+
+--b)Listar nome da gravadora com maior número de playlists que possuem pelo uma faixa composta pelo compositor Dvorack.
+
+create view DvorackEhOMelhor
+as 
+select count(*)  --Numero de músicas pela playlist
+from playlist p
+join musica_playlist mp
+on p.cod_playlist = mp.cod_playlist
+join faixa f
+on f.cod_musica = mp.cod_musica
+group by cod_playlist
