@@ -1,182 +1,118 @@
--- Insert data into gravadora table
-INSERT INTO gravadora (cod_gravadora, Endereco_homepage, Endereco, nome)
-VALUES (1, 'http://example.com', '123 Main St', 'Record Company 1');
-
--- Insert data into album table
-INSERT INTO album (cod_album, tipoCompra, preco, data_de_gravacao, data_da_compra, cod_gravadora)
-VALUES (1, 'Physical', 19.99, '2023-01-15', '2023-02-01', 1);
-
--- Insert data into midiaFisica table
-INSERT INTO midiaFisica (cod_meio, tipo, cod_album)
-VALUES (1, 'CD', 1);
-
--- Insert data into telefones table
-INSERT INTO telefones (cod_telefone, telefone)
-VALUES (1, 1234567890);
-
--- Insert data into tipo_de_composicao table
-INSERT INTO tipo_de_composicao (cod_tipo_composicao, descricao)
-VALUES ('Rock', 'Rock genre');
-
--- Insert data into interprete table
-INSERT INTO interprete (cod_interprete, nome, tipo)
-VALUES (1, 'Artist 1', 'Soprano');
-
--- Insert data into faixa table
-INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
-VALUES (1, 'Song 1', '00:04:30', 'Rock', 'DDD', 1, 1);
-
--- Insert data into interprete_musica table
-INSERT INTO interprete_musica (cod_interprete, cod_musica)
-VALUES (1, 1);
-
--- Insert data into midia_musica table
-INSERT INTO midia_musica (cod_meio, cod_musica, numeroFaixa)
-VALUES (1, 1, 1);
-
--- Insert data into periodo table
-INSERT INTO periodo (cod_periodo, comeco, fim, descricao)
-VALUES ('1900-2000', '1900-01-01', '2000-12-31', '20th Century');
-
--- Insert data into compositor table
-INSERT INTO compositor (cod_compositor, nome, data_de_nascimento, data_de_falecimento, local_nascimento, cod_periodo)
-VALUES (1, 'Composer 1', '1850-01-01', '1920-05-15', 'City, Country', '1900-2000');
-
--- Insert data into compositor_musica table
-INSERT INTO compositor_musica (cod_musica, cod_compositor)
-VALUES (1, 1);
-
--- Insert data into playlist table
-INSERT INTO playlist (cod_playlist, nome, tempo_de_execucao_total, data_criacao)
-VALUES (1, 'My Playlist', '01:30:00', '2023-03-01');
-
--- Insert data into musica_playlist table
-INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
-VALUES (1, 1, 5, '2023-03-15');
-
-
--- Insert data into gravadora table
-INSERT INTO gravadora (cod_gravadora, Endereco_homepage, Endereco, nome)
-VALUES (2, 'http://musiccompany.com', '456 Oak St', 'Sound Records');
-
--- Insert data into album table
-INSERT INTO album (cod_album, tipoCompra, preco, data_de_gravacao, data_da_compra, cod_gravadora)
-VALUES (2, 'Digital', 12.99, '2023-02-20', '2023-03-05', 2);
-
--- Insert data into midiaFisica table
-INSERT INTO midiaFisica (cod_meio, tipo, cod_album)
-VALUES (2, 'Vinyl', 2);
-
--- Insert data into telefones table
-INSERT INTO telefones (cod_telefone, telefone)
-VALUES (2, 9876543210);
-
--- Insert data into tipo_de_composicao table
-INSERT INTO tipo_de_composicao (cod_tipo_composicao, descricao)
-VALUES ('Pop', 'Pop genre');
-
--- Insert data into interprete table
-INSERT INTO interprete (cod_interprete, nome, tipo)
-VALUES (2, 'Singer 2', 'Orquestra');
-
--- Insert data into faixa table
-INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
-VALUES (2, 'Track 2', '00:03:45', 'Pop', 'Live', 2, 2);
-
--- Insert data into interprete_musica table
-INSERT INTO interprete_musica (cod_interprete, cod_musica)
-VALUES (2, 2);
-
--- Insert data into midia_musica table
-INSERT INTO midia_musica (cod_meio, cod_musica, numeroFaixa)
-VALUES (2, 2, 1);
-
--- Insert data into periodo table
-INSERT INTO periodo (cod_periodo, comeco, fim, descricao)
-VALUES ('2000-2020', '2000-01-01', '2020-12-31', '21st Century');
-
--- Insert data into compositor table
-INSERT INTO compositor (cod_compositor, nome, data_de_nascimento, data_de_falecimento, local_nascimento, cod_periodo)
-VALUES (2, 'Songwriter 2', '1960-03-10', 'Alive', 'City2, Country2', '2000-2020');
-
--- Insert data into compositor_musica table
-INSERT INTO compositor_musica (cod_musica, cod_compositor)
-VALUES (2, 2);
-
--- Insert data into playlist table
-INSERT INTO playlist (cod_playlist, nome, tempo_de_execucao_total, data_criacao)
-VALUES (2, 'My Playlist 2', '01:15:00', '2023-03-10');
-
--- Insert data into musica_playlist table
-INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
-VALUES (2, 2, 8, '2023-03-20');
-
-
--- Insert data into gravadora table
-INSERT INTO gravadora (cod_gravadora, Endereco_homepage, Endereco, nome)
-VALUES (3, 'http://swedishrecords.se', '789 Pine St', 'Ljud Inspelningar AB');
-
--- Insert data into album table
-INSERT INTO album (cod_album, tipoCompra, preco, data_de_gravacao, data_da_compra, cod_gravadora)
-VALUES (3, 'Digital', 24.99, '2023-04-10', '2023-04-25', 3);
-
--- Insert data into midiaFisica table
-INSERT INTO midiaFisica (cod_meio, tipo, cod_album)
-VALUES (3, 'CD', 3);
-
--- Insert data into telefones table
-INSERT INTO telefones (cod_telefone, telefone)
-VALUES (3, 1122334455);
-
--- Insert data into tipo_de_composicao table
-INSERT INTO tipo_de_composicao (cod_tipo_composicao, descricao)
-VALUES ('Electronic', 'Electronic genre');
-
--- Insert data into interprete table
-INSERT INTO interprete (cod_interprete, nome, tipo)
-VALUES (3, 'Artist 3', 'Orquestra');
-
--- Insert data into faixa table
-INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
-VALUES (3, 'Sång 3', '00:05:15', 'Electronic', 'Studio', 3, 3);
-
--- Insert data into interprete_musica table
-INSERT INTO interprete_musica (cod_interprete, cod_musica)
-VALUES (3, 3);
-
--- Insert data into midia_musica table
-INSERT INTO midia_musica (cod_meio, cod_musica, numeroFaixa)
-VALUES (3, 3, 1);
-
--- Insert data into periodo table
-INSERT INTO periodo (cod_periodo, comeco, fim, descricao)
-VALUES ('2020-2050', '2020-01-01', '2050-12-31', '21st Century');
-
--- Insert data into compositor table
-INSERT INTO compositor (cod_compositor, nome, data_de_nascimento, data_de_falecimento, local_nascimento, cod_periodo)
-VALUES (3, 'Kompositör 3', '1975-06-20', NULL, 'Stad3, Land3', '2020-2050');
-
--- Insert data into compositor_musica table
-INSERT INTO compositor_musica (cod_musica, cod_compositor)
-VALUES (3, 3);
-
--- Insert data into playlist table
-INSERT INTO playlist (cod_playlist, nome, tempo_de_execucao_total, data_criacao)
-VALUES (3, 'Min Spellista 3', '01:45:00', '2023-04-01');
-
--- Insert data into musica_playlist table
-INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
-VALUES (3, 3, 12, '2023-04-15');
-
-
 --Tabelas independentes: Gravadora, Periodo, Interprete, Playlist, Tipo de composição 
+
+--Gravadora
+INSERT INTO gravadora (cod_gravadora, Endereco_homepage, Endereco, nome, telefone)
+VALUES
+  (1, 'http://www.example1.com', '123 Main St', 'Record Company 1', '123-456-7890'),
+  (2, 'http://www.example2.com', '456 Oak St', 'Music Producers Ltd', '987-654-3210'),
+  (3, 'http://www.example3.com', '789 Pine St', 'Sound Studios', '111-222-3333'),
+  (4, 'http://www.example4.com', '321 Elm St', 'Melody Creations', '555-666-7777'),
+  (5, 'http://www.example5.com', '567 Birch St', 'Harmony Records', '999-888-7777'),
+  (6, 'http://www.example6.com', '890 Cedar St', 'Rhythm Entertainment', '444-333-2222'),
+  (7, 'http://www.example7.com', '765 Maple St', 'Symphony Productions', '333-444-5555'),
+  (8, 'http://www.example8.com', '432 Fir St', 'Song Crafters', '777-888-9999'),
+  (9, 'http://www.example9.com', '876 Pine St', 'Note Studios', '222-111-0000'),
+  (10, 'http://www.example10.com', '543 Oak St', 'Tune Makers', '666-555-4444');
+
+--Periodo
+-- Insert data into periodo table
+INSERT INTO periodo (cod_periodo, comeco, fim, descricao)
+VALUES
+  ('P1', '2000-01-01', '2010-12-31', 'First Decade'),
+  ('P2', '2011-01-01', '2020-12-31', 'Second Decade'),
+  ('P3', '2021-01-01', '2030-12-31', 'Third Decade'),
+  ('P4', '2031-01-01', '2040-12-31', 'Fourth Decade'),
+  ('P5', '2041-01-01', '2050-12-31', 'Fifth Decade'),
+  ('P7', '2061-01-01', '2070-12-31', 'Seventh Decade'),
+  ('P8', '2071-01-01', '2080-12-31', 'Eighth Decade'),
+  ('P9', '2081-01-01', '2090-12-31', 'Ninth Decade'),
+  ('P10', '2091-01-01', '2100-12-31', 'Tenth Decade');
+--Interprete
+
+-- Insert data into interprete table
+INSERT INTO interprete (cod_interprete, nome, tipo)
+VALUES
+  (1, 'Singer 1', 'Vocalist'),
+  (2, 'Guitarist 1', 'Instrumentalist'),
+  (3, 'Pianist 1', 'Instrumentalist'),
+  (4, 'Bassist 1', 'Instrumentalist'),
+  (5, 'Drummer 1', 'Instrumentalist'),
+  (6, 'Violinist 1', 'Instrumentalist'),
+  (7, 'Cellist 1', 'Instrumentalist'),
+  (8, 'Flutist 1', 'Instrumentalist'),
+  (9, 'Saxophonist 1', 'Instrumentalist'),
+  (10, 'Trumpeter 1', 'Instrumentalist');
+
+--Playlists
+
+-- Insert data into playlist table
+INSERT INTO playlist (cod_playlist, nome, tempo_de_execucao_total, data_criacao)
+VALUES
+  (1, 'My Playlist 1', '01:30:00', '2023-05-01'),
+  (2, 'Top Hits', '02:15:00', '2023-05-05'),
+  (3, 'Chill Vibes', '01:00:00', '2023-05-10'),
+  (4, 'Rock Classics', '03:30:00', '2023-05-15'),
+  (5, 'Pop Party Mix', '01:45:00', '2023-05-20'),
+  (6, 'Jazz Lounge', '02:00:00', '2023-05-25'),
+  (7, 'Indie Favorites', '01:20:00', '2023-05-30'),
+  (8, 'Electronic Beats', '01:45:00', '2023-06-01'),
+  (9, 'Country Jams', '02:30:00', '2023-06-05'),
+  (10, 'R&B Grooves', '01:15:00', '2023-06-10');
+
+
+-- Insert data into tipo_de_composicao table
+INSERT INTO tipo_de_composicao (cod_tipo_composicao, descricao)
+VALUES
+  ('Pop', 'Pop genre'),
+  ('Rock', 'Rock genre'),
+  ('Jazz', 'Jazz genre'),
+  ('Electronic', 'Electronic genre'),
+  ('Hip-Hop', 'Hip-Hop genre'),
+  ('Classical', 'Classical genre'),
+  ('Country', 'Country genre'),
+  ('Blues', 'Blues genre'),
+  ('R&B', 'Rhythm and Blues genre'),
+  ('Indie', 'Indie genre');
+
+
 INSERT INTO periodo (cod_periodo, comeco, fim, descricao)
 VALUES ('Barroco', '1600-01-01', '1700-12-31', 'Estilo do século 17');
 
 INSERT INTO tipo_de_composicao (cod_tipo_composicao, descricao)
 VALUES ('Conserto', 'Conserto');
 
---Tabelas dependentes grau 1: Compositor, Album, Telefones
+--Tabelas dependentes grau 1: Compositor, Album
+
+-- Insert data into compositor table
+INSERT INTO compositor (cod_compositor, nome, data_de_nascimento, data_de_falecimento, local_nascimento, cod_periodo)
+VALUES
+  (1, 'John Songsmith', '1970-05-15', NULL, 'City1, Country1', 'P1'),
+  (2, 'Emily Melodymaker', '1985-08-22', NULL, 'City2, Country2', 'P2'),
+  (3, 'Michael Harmony', '1968-02-10', '2022-06-30', 'City3, Country3', 'P3'),
+  (4, 'Sarah Composer', '1990-11-20', NULL, 'City4, Country4', 'P4'),
+  (5, 'Daniel Tunebuilder', '1975-04-03', NULL, 'City5, Country5', 'P5'),
+  (6, 'Laura Rhythmcraft', '1980-09-18', NULL, 'City6, Country6', 'P6'),
+  (7, 'Alex Beatweaver', '1963-12-25', '2021-03-15', 'City7, Country7', 'P7'),
+  (8, 'Olivia Noteartist', '1995-06-08', NULL, 'City8, Country8', 'P8'),
+  (9, 'William Serenademaker', '1978-01-30', NULL, 'City9, Country9', 'P9'),
+  (10, 'Eva Sonatacreator', '1987-07-12', NULL, 'City10, Country10', 'P10');
+
+-- Insert data into album table
+INSERT INTO album (cod_album, tipoCompra, preco, data_de_gravacao, data_da_compra, cod_gravadora)
+VALUES
+  (1, 'Digital', 19.99, '2023-05-01', '2023-05-10', 1),
+  (2, 'CD', 24.99, '2023-05-02', '2023-05-12', 2),
+  (3, 'Vinyl', 29.99, '2023-05-03', '2023-05-14', 3),
+  (4, 'Digital', 21.99, '2023-05-04', '2023-05-16', 4),
+  (5, 'CD', 26.99, '2023-05-05', '2023-05-18', 5),
+  (6, 'Vinyl', 31.99, '2023-05-06', '2023-05-20', 6),
+  (7, 'Digital', 23.99, '2023-05-07', '2023-05-22', 7),
+  (8, 'CD', 28.99, '2023-05-08', '2023-05-24', 8),
+  (9, 'Vinyl', 33.99, '2023-05-09', '2023-05-26', 9),
+  (10, 'Digital', 25.99, '2023-05-10', '2023-05-28', 10);
+
+
+
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
 VALUES (4, 'Song 1', '00:04:30', 'Rock', 'DDD', 1, 1);
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
@@ -191,12 +127,148 @@ VALUES (19, 'Song 3', '00:14:30', 'Conserto', 'DDD', 1, 1);
 
 
 INSERT INTO compositor (cod_compositor, nome, data_de_nascimento, data_de_falecimento, local_nascimento, cod_periodo)
-VALUES (7, 'Composer 2', '1600-01-01', '1700-01-01', 'City, Country', 'Barroco');
+VALUES (17, 'Composer 2', '1600-01-01', '1700-01-01', 'City, Country', 'Barroco');
 
 INSERT INTO compositor (cod_compositor, nome, data_de_nascimento, data_de_falecimento, local_nascimento, cod_periodo)
-VALUES (8, 'Composer 2', '1600-01-01', '1700-01-01', 'City, Classico', 'Barroco');
+VALUES (18, 'Composer 2', '1600-01-01', '1700-01-01', 'City, Classico', 'Barroco');
 
 --Tabelas dependentes grau 2: Midia Fisica, Faixa, tabelas de ligação...
+
+-- Insert data into midiaFisica table
+INSERT INTO midiaFisica (cod_meio, tipo, cod_album)
+VALUES
+  (1, 'CD', 1),
+  (2, 'Vinyl', 2),
+  (3, 'CD', 3),
+  (4, 'Vinyl', 4),
+  (5, 'CD', 5),
+  (6, 'Vinyl', 6),
+  (7, 'CD', 7),
+  (8, 'Vinyl', 8),
+  (9, 'CD', 9),
+  (10, 'Vinyl', 10);
+
+INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
+VALUES
+  (51, 'Track 51', '00:03:45', 'Pop', 'Stereo', 1, 1),
+  (52, 'Track 52', '00:04:30', 'Rock', 'Stereo', 2, 2),
+  (53, 'Track 53', '00:02:15', 'Jazz', 'Mono', 3, 3),
+  (54, 'Track 54', '00:03:20', 'Electronic', 'Stereo', 4, 4),
+  (55, 'Track 55', '00:04:10', 'Hip-Hop', 'Stereo', 5, 5),
+  (56, 'Track 56', '00:02:45', 'Classical', 'Mono', 6, 6),
+  (57, 'Track 57', '00:03:30', 'Country', 'Stereo', 7, 7),
+  (58, 'Track 58', '00:04:00', 'Blues', 'Stereo', 8, 8),
+  (59, 'Track 59', '00:03:15', 'R&B', 'Stereo', 9, 9),
+  (60, 'Track 60', '00:02:50', 'Indie', 'Mono', 10, 10),
+  (61, 'Track 61', '00:03:40', 'Pop', 'Stereo', 1, 1),
+  (62, 'Track 62', '00:04:25', 'Rock', 'Stereo', 2, 2),
+  (63, 'Track 63', '00:02:10', 'Jazz', 'Mono', 3, 3),
+  (64, 'Track 64', '00:03:15', 'Electronic', 'Stereo', 4, 4),
+  (65, 'Track 65', '00:04:05', 'Hip-Hop', 'Stereo', 5, 5),
+  (66, 'Track 66', '00:02:40', 'Classical', 'Mono', 6, 6),
+  (67, 'Track 67', '00:03:25', 'Country', 'Stereo', 7, 7),
+  (68, 'Track 68', '00:03:55', 'Blues', 'Stereo', 8, 8),
+  (69, 'Track 69', '00:03:10', 'R&B', 'Stereo', 9, 9),
+  (70, 'Track 70', '00:02:45', 'Indie', 'Mono', 10, 10);
+
+-- Insert data into musica_playlist table with cod_musica values from 50 to 70
+-- Insert data into musica_playlist table with cod_musica values from 50 to 70 and cod_playlist values looping from 1 to 10
+INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
+VALUES
+  (50, 1, 5, '2023-05-15'),
+  (51, 2, 8, '2023-05-17'),
+  (52, 3, 3, '2023-05-20'),
+  (53, 4, 10, '2023-05-22'),
+  (54, 5, 6, '2023-05-25'),
+  (55, 6, 12, '2023-05-28'),
+  (56, 7, 7, '2023-06-01'),
+  (57, 8, 4, '2023-06-03'),
+  (58, 9, 9, '2023-06-06'),
+  (59, 10, 5, '2023-06-08'),
+  (60, 1, 6, '2023-06-11'),
+  (61, 2, 11, '2023-06-14'),
+  (62, 3, 8, '2023-06-17'),
+  (63, 4, 3, '2023-06-20'),
+  (64, 5, 9, '2023-06-23'),
+  (65, 6, 7, '2023-06-26'),
+  (66, 7, 4, '2023-06-29'),
+  (67, 8, 6, '2023-07-02'),
+  (68, 9, 10, '2023-07-05'),
+  (69, 10, 8, '2023-07-08'),
+  (70, 1, 5, '2023-07-11'),
+  (50, 2, 12, '2023-07-14'),
+  (51, 3, 7, '2023-07-17'),
+  (52, 4, 9, '2023-07-20'),
+  (53, 5, 6, '2023-07-23'),
+  (54, 6, 11, '2023-07-26'),
+  (55, 7, 8, '2023-07-29'),
+  (56, 8, 4, '2023-08-01'),
+  (57, 9, 9, '2023-08-04'),
+  (58, 10, 7, '2023-08-07'),
+  (59, 1, 5, '2023-08-10'),
+  (60, 2, 10, '2023-08-13'),
+  (61, 3, 8, '2023-08-16'),
+  (62, 4, 3, '2023-08-19'),
+  (63, 5, 6, '2023-08-22'),
+  (64, 6, 11, '2023-08-25'),
+  (65, 7, 9, '2023-08-28'),
+  (66, 8, 4, '2023-08-31'),
+  (67, 9, 7, '2023-09-03'),
+  (68, 10, 10, '2023-09-06');
+
+-- Insert data into musica_playlist table with cod_musica values from 50 to 70 and cod_playlist values looping from 1 to 10
+INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
+VALUES
+  (70, 1, 5, '2023-07-11'),
+  (69, 2, 8, '2023-07-08'),
+  (68, 3, 10, '2023-07-05'),
+  (67, 4, 6, '2023-07-02'),
+  (66, 5, 4, '2023-06-29'),
+  (65, 6, 7, '2023-06-26'),
+  (64, 7, 9, '2023-06-23'),
+  (63, 8, 3, '2023-06-20'),
+  (62, 9, 8, '2023-06-17'),
+  (61, 10, 11, '2023-06-14'),
+  (60, 1, 6, '2023-06-11'),
+  (59, 2, 5, '2023-06-08'),
+  (58, 3, 9, '2023-06-06'),
+  (57, 4, 4, '2023-06-03'),
+  (56, 5, 7, '2023-06-01'),
+  (55, 6, 12, '2023-05-28'),
+  (54, 7, 6, '2023-05-25'),
+  (53, 8, 10, '2023-05-22'),
+  (52, 9, 3, '2023-05-20'),
+  (51, 10, 8, '2023-05-17'),
+  (50, 1, 5, '2023-05-15')
+
+  -- Insert data into midia_musica table with cod_musica values from 50 to 70 and cod_meio values looping from 1 to 10
+-- Insert data into midia_musica table with cod_musica values from 70 to 50 and unique cod_meio values
+INSERT INTO midia_musica (cod_musica, cod_meio, numeroFaixa)
+VALUES
+  (70, 1, 1),
+  (69, 2, 2),
+  (68, 3, 3),
+  (67, 4, 4),
+  (66, 5, 5),
+  (65, 6, 6),
+  (64, 7, 7),
+  (63, 8, 8),
+  (62, 9, 9),
+  (61, 10, 10),
+  (60, 1, 1),
+  (59, 2, 2),
+  (58, 3, 3),
+  (57, 4, 4),
+  (56, 5, 5),
+  (55, 6, 6),
+  (54, 7, 7),
+  (53, 8, 8),
+  (52, 9, 9),
+  (51, 10, 10),
+  (50, 1, 1)
+
+
+
 
 INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
 VALUES (17, 4, 12, '2023-04-15');
@@ -206,11 +278,10 @@ INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, u
 VALUES (19, 4, 12, '2023-04-15');
 
 
-
 --Playlist só barroco classico
 
 INSERT INTO playlist (cod_playlist, nome, tempo_de_execucao_total, data_criacao)
-VALUES (4, 'Playlist classica', '01:15:00', '2023-03-10');
+VALUES (24, 'Playlist classica', '01:15:00', '2023-03-10');
 
 INSERT INTO compositor_musica (cod_musica, cod_compositor)
 VALUES (17, 7);
@@ -222,4 +293,11 @@ INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao
 VALUES (21, 'Song 5', '00:24:30', 'Conserto', 'DDD', 1, 1);
 
 INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
-VALUES (21, 4, 12, '2023-04-15');
+VALUES (21, 24, 12, '2023-04-15');
+-- USE master;
+-- GO
+-- ALTER DATABASE BDSpotPer 
+-- SET SINGLE_USER 
+-- WITH ROLLBACK IMMEDIATE;
+-- GO
+-- DROP DATABASE BDSpotPer;

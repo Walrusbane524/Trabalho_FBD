@@ -85,7 +85,7 @@ create table periodo(
 
 create table compositor(
     cod_compositor int primary key,
-    nome char(255),
+    nome varchar(255),
     data_de_nascimento date,
     data_de_falecimento date,
     local_nascimento char(255),
@@ -105,7 +105,7 @@ create table compositor_musica(
 
 create table playlist(
     cod_playlist int primary key,
-    nome char(255),
+    nome varchar(255),
     tempo_de_execucao_total time,
     data_criacao date,
 
