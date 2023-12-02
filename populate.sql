@@ -23,6 +23,7 @@ VALUES
   ('P3', '2021-01-01', '2030-12-31', 'Third Decade'),
   ('P4', '2031-01-01', '2040-12-31', 'Fourth Decade'),
   ('P5', '2041-01-01', '2050-12-31', 'Fifth Decade'),
+  ('P6', '2051-01-01', '2060-12-31', 'Singed Root'),
   ('P7', '2061-01-01', '2070-12-31', 'Seventh Decade'),
   ('P8', '2071-01-01', '2080-12-31', 'Eighth Decade'),
   ('P9', '2081-01-01', '2090-12-31', 'Ninth Decade'),
@@ -91,7 +92,7 @@ VALUES
   (3, 'Michael Harmony', '1968-02-10', '2022-06-30', 'City3, Country3', 'P3'),
   (4, 'Sarah Composer', '1990-11-20', NULL, 'City4, Country4', 'P4'),
   (5, 'Daniel Tunebuilder', '1975-04-03', NULL, 'City5, Country5', 'P5'),
---   (6, 'Laura Rhythmcraft', '1980-09-18', NULL, 'City6, Country6', 'P6'),
+  (6, 'Laura Rhythmcraft', '1980-09-18', NULL, 'City6, Country6', 'P5'),
   (7, 'Alex Beatweaver', '1963-12-25', '2021-03-15', 'City7, Country7', 'P7'),
   (8, 'Olivia Noteartist', '1995-06-08', NULL, 'City8, Country8', 'P8'),
   (9, 'William Serenademaker', '1978-01-30', NULL, 'City9, Country9', 'P9'),
@@ -195,8 +196,7 @@ VALUES
   (54, 7, 6, '2023-05-25'),
   (53, 8, 10, '2023-05-22'),
   (52, 9, 3, '2023-05-20'),
-  (51, 10, 8, '2023-05-17'),
-  (50, 1, 5, '2023-05-15')
+  (51, 10, 8, '2023-05-17')
 
 INSERT INTO midia_musica (cod_musica, cod_meio, numeroFaixa)
 VALUES
@@ -269,7 +269,7 @@ VALUES
   (54, 7),
   (53, 8),
   (52, 9),
-  (51, 10),
+  (51, 10)
 
 
 INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
