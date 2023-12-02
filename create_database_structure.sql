@@ -385,30 +385,30 @@ create view DvoracEhOMior
 as 
 
 
-top
-(
-    select f.cod_gravadora as gravadora, count(p.cod_playlist) as numeroDePlaylists --playlists do dvorac
-    from playlist p
-    join musica_playlist mp
-    on p.cod_playlist = mp.cod_playlist
-    full join faixa f
-    on f.cod_musica = mp.cod_musica
-
-    where f.cod_musica in (
-
-        --musicas do dvorac
-        select cod_musica 
-        from compositor_musica cm 
-        join compositor c
-        on c.cod_compositor = cm.cod_compositor
-        where c.nome = 'Dvorac'
-    )
-
-    group by p.cod_playlist, f.cod_gravadora
-
-    order by numeroDePlaylists
+select nome, cod_gravadora from gravadora gravadora
 
 
-)
+select * from gravadora gravadora
+
+join 
+
+    (
+        select top 1 f.cod_gravadora as id, count(p.cod_playlist) as numeroDePlaylists --playlists do dvorac
+        from playlist p
+        join musica_playlist mp
+        on p.cod_playlist = mp.cod_playlist
+        full join faixa f
+        on f.cod_musica = mp.cod_musica
+
+       
+
+        group by p.cod_playlist, f.cod_gravadora
+
+        order by numeroDePlaylists desc
+
+
+    ) melhorGravadora
+on gravadora.cod_gravadora = melhorGravadora.id
+
 
 --c)
