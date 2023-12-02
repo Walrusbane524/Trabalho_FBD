@@ -457,5 +457,5 @@ as
         full join faixa f               on f.cod_musica = mp.cod_musica
         inner join compositor_musica cm on cm.cod_musica = f.cod_musica 
         inner join compositor c         on c.cod_compositor = cm.cod_compositor
-        where mp.cod_playlist = p.cod_playlist and c.cod_tipo_composicao != 'Concerto' or c.cod_periodo != 'Barroco'
+        where mp.cod_playlist = p.cod_playlist and f.cod_tipo_composicao != 'Concerto' or c.cod_periodo != 'Barroco'
     )
