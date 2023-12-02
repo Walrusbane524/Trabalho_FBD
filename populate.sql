@@ -1,7 +1,7 @@
 --Inserções
 insert into gravadora values(1, 'www.nuclearRecords.com.com.com.com.br', 'Suécia', 'NuclearRecords');
 insert into gravadora values(1, 'www.romanov.com.com.com.com.br', 'Coreia do Oeste', 'Romanov');
-insert into album values(1, 1, 200.84, '2001-03-12', '2003-04-09', 1);
+insert into album values(1, 'Debito', 200.84, '2001-03-12', '2003-04-09', 1);
 
 -- Insert data into midiaFisica
 INSERT INTO midiaFisica VALUES (1, 'CD', 1);
@@ -30,7 +30,7 @@ INSERT INTO musica_playlist VALUES (1, 1, 5, '2023-01-15');
 -- Insert data into gravadora
 INSERT INTO gravadora VALUES (101, 'www.innovativeRecords.com', 'Innovative Street 123', 'Innovative Records');
 -- Insert data into album
-INSERT INTO album VALUES (201, 2, 39.99, '2023-02-20', '2023-02-25', 101);
+INSERT INTO album VALUES (201, 'credito', 39.99, '2023-02-20', '2023-02-25', 101);
 -- Insert data into midiaFisica
 INSERT INTO midiaFisica VALUES (301, 'Vinyl', 201);
 -- Insert data into telefones

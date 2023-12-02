@@ -10,7 +10,7 @@ create table gravadora(
 
 create table album(
     cod_album int primary key,
-    tipo int, 
+    tipoCompra char(20), 
     preco decimal(10,2),
     data_de_gravacao date check (data_de_gravacao > '2000-01-01'), --Posterior a 2000
     data_da_compra date,
