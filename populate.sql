@@ -1,57 +1,55 @@
---Inserções
-insert into gravadora values(1, 'www.nuclearRecords.com.com.com.com.br', 'Suécia', 'NuclearRecords');
-insert into gravadora values(1, 'www.romanov.com.com.com.com.br', 'Coreia do Oeste', 'Romanov');
-insert into album values(1, 'Debito', 200.84, '2001-03-12', '2003-04-09', 1);
+-- Insert data into gravadora table
+INSERT INTO gravadora (cod_gravadora, Endereco_homepage, Endereco, nome)
+VALUES (1, 'http://example.com', '123 Main St', 'Record Company 1');
 
--- Insert data into midiaFisica
-INSERT INTO midiaFisica VALUES (1, 'CD', 1);
--- Insert data into telefones
-INSERT INTO telefones VALUES (1, 123456789);
--- Insert data into tipo_de_composicao
-INSERT INTO tipo_de_composicao VALUES ('Rock', 'O rock foi um...');
--- Insert data into interprete
-INSERT INTO interprete VALUES (1, 'Interprete1', 1);
--- Insert data into faixa
-INSERT INTO faixa VALUES (1, 'Faixa1', '00:03:30', 'Jazz', 'Rock', 'Estúdio', 1);
--- Insert data into interprete_musica
-INSERT INTO interprete_musica VALUES (1, 1);
--- Insert data into midia_musica
-INSERT INTO midia_musica VALUES (1, 1, 1);
--- Insert data into periodo
-INSERT INTO periodo VALUES ('Periodo1', '2000-01-01', '2023-12-31', 'Descrição do Periodo');
--- Insert data into compositor
-INSERT INTO compositor VALUES (1, 'Compositor1', '1980-01-01', '2022-12-31', 'LocalNascimento', 'Periodo1');
--- Insert data into compositor_musica
-INSERT INTO compositor_musica VALUES (1, 1);
--- Insert data into playlist
-INSERT INTO playlist VALUES (1, 'Playlist1', '00:30:00', '2023-01-01');
--- Insert data into musica_playlist
-INSERT INTO musica_playlist VALUES (1, 1, 5, '2023-01-15');
--- Insert data into gravadora
-INSERT INTO gravadora VALUES (101, 'www.innovativeRecords.com', 'Innovative Street 123', 'Innovative Records');
--- Insert data into album
-INSERT INTO album VALUES (201, 'credito', 39.99, '2023-02-20', '2023-02-25', 101);
--- Insert data into midiaFisica
-INSERT INTO midiaFisica VALUES (301, 'Vinyl', 201);
--- Insert data into telefones
-INSERT INTO telefones VALUES (401, 987654321);
--- Insert data into tipo_de_composicao
-INSERT INTO tipo_de_composicao VALUES ('Jazz', 'O jazz foi um...');
--- Insert data into interprete
-INSERT INTO interprete VALUES (501, 'Innovative Artist', 2);
--- Insert data into faixa
-INSERT INTO faixa VALUES ('Track of Innovation', '00:05:45', 301, 301, 101, 'Live', 201);
--- Insert data into interprete_musica
-INSERT INTO interprete_musica VALUES (502, 301);
--- Insert data into midia_musica
-INSERT INTO midia_musica VALUES (303, 301, 2);
--- Insert data into periodo
-INSERT INTO periodo VALUES ('Period of Innovation', '2005-01-01', '2023-12-31', 'A period of groundbreaking music');
--- Insert data into compositor
-INSERT INTO compositor VALUES (503, 'Innovative Composer', '1985-03-15', NULL, 'Birthplace City', 'Period of Innovation');
--- Insert data into compositor_musica
-INSERT INTO compositor_musica VALUES (502, 503);
--- Insert data into playlist
-INSERT INTO playlist VALUES (701, 'Innovative Playlist', '01:15:00', '2023-02-01');
--- Insert data into musica_playlist
-INSERT INTO musica_playlist VALUES (502, 701, 10, '2023-02-15');
+-- Insert data into album table
+INSERT INTO album (cod_album, tipoCompra, preco, data_de_gravacao, data_da_compra, cod_gravadora)
+VALUES (1, 'Physical', 19.99, '2023-01-15', '2023-02-01', 1);
+
+-- Insert data into midiaFisica table
+INSERT INTO midiaFisica (cod_meio, tipo, cod_album)
+VALUES (1, 'CD', 1);
+
+-- Insert data into telefones table
+INSERT INTO telefones (cod_telefone, telefone)
+VALUES (1, 1234567890);
+
+-- Insert data into tipo_de_composicao table
+INSERT INTO tipo_de_composicao (cod_tipo_composicao, descricao)
+VALUES ('Rock', 'Rock genre');
+
+-- Insert data into interprete table
+INSERT INTO interprete (cod_interprete, nome, tipo)
+VALUES (1, 'Artist 1', 1);
+
+-- Insert data into faixa table
+INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
+VALUES (1, 'Song 1', '00:04:30', 'Rock', 'Studio', 1, 1);
+
+-- Insert data into interprete_musica table
+INSERT INTO interprete_musica (cod_interprete, cod_musica)
+VALUES (1, 1);
+
+-- Insert data into midia_musica table
+INSERT INTO midia_musica (cod_meio, cod_musica, numeroFaixa)
+VALUES (1, 1, 1);
+
+-- Insert data into periodo table
+INSERT INTO periodo (cod_periodo, comeco, fim, descricao)
+VALUES ('1900-2000', '1900-01-01', '2000-12-31', '20th Century');
+
+-- Insert data into compositor table
+INSERT INTO compositor (cod_compositor, nome, data_de_nascimento, data_de_falecimento, local_nascimento, cod_periodo)
+VALUES (1, 'Composer 1', '1850-01-01', '1920-05-15', 'City, Country', '1900-2000');
+
+-- Insert data into compositor_musica table
+INSERT INTO compositor_musica (cod_musica, cod_compositor)
+VALUES (1, 1);
+
+-- Insert data into playlist table
+INSERT INTO playlist (cod_playlist, nome, tempo_de_execucao_total, data_criacao)
+VALUES (1, 'My Playlist', '01:30:00', '2023-03-01');
+
+-- Insert data into musica_playlist table
+INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
+VALUES (1, 1, 5, '2023-03-15');
