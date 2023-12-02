@@ -152,6 +152,8 @@ begin
     end
 end
 
+GO
+
 --Consertado
 create trigger precoAlto on album 
 for insert, update
@@ -177,6 +179,8 @@ begin
     end
 end
 
+GO
+
 --Consertado
 create trigger limiteTamanho on album
 for insert, update
@@ -198,6 +202,8 @@ begin
     
 end
 
+GO
+
 --Consertado
 create trigger CdVinilDownload on midiaFisica
 for insert, update
@@ -216,6 +222,7 @@ begin
     end
 end;
 
+GO
 
 --Consertado
 create trigger deletarMeioFisico on faixa
@@ -236,6 +243,8 @@ begin
 	)
     
 end;
+
+GO
 
 --Consertado
 create trigger tipoGravacao on faixa
@@ -267,6 +276,8 @@ begin
     
 end;
 
+GO
+
 create trigger calcularTamanhoPlaylist on musica_playlist
 after insert, update 
 as 
@@ -287,12 +298,15 @@ begin
     
 end
 
+GO
+
 --Quarta condição: Sucesso
 
 CREATE UNIQUE CLUSTERED INDEX IX_Faixa_CodigoAlbum
 ON faixa(cod_album)
 WITH FILLFACTOR = 100;
 
+GO
 
 CREATE NONCLUSTERED INDEX IX_Faixa_TipoComposicao
 ON faixa(cod_tipo_composicao)
@@ -301,6 +315,7 @@ WITH FILLFACTOR = 100;
 
 --Quinta condição: Sucesso
 
+GO
 
 -- Criar a visão materializada: consertar outer join
 create view visaoPlaylist
@@ -316,6 +331,8 @@ select
 
 
 --Sexta condição: Sucesso
+
+GO
 
 -- Criar a função
 
@@ -337,11 +354,14 @@ return
 
 --Setima condição: Pesquisa da database
 
+GO
 
 --i)
 create view mostrarAlbunsComFaixas
 as
 select * from album join faixa on faixa.cod_album = album.cod_album
+
+GO
 
 --ii)
 create view mostrarPlaylistsComMusicas
@@ -352,6 +372,7 @@ on playlist.cod_playlist = musica_playlist.cod_playlist
 left outer join faixa 
 on faixa.cod_musica = musica_playlist.cod_musica
 
+GO
 
 create procedure inserirMusica
 (
@@ -362,6 +383,8 @@ as
 begin
     insert into musica_playlist values(@musicaInserida, @playlistCodigo, 0, null)
 end
+
+GO
 
 create procedure removerMusica
 (
@@ -376,7 +399,7 @@ end
 --iii)
 
 --a)
-
+GO
 --Meio que uma gambiarra, mas evita de repetir a query (select avg(preco) from album) cada vez
 create view albumsCaros
 as
@@ -384,6 +407,7 @@ select * from album album
 join (select avg(preco) from album) medio 
 where album.preco > medio.preco
 
+GO
 
 --b)Listar nome da gravadora com maior número de playlists que possuem pelo uma faixa composta pelo compositor Dvorack.
 
@@ -424,6 +448,7 @@ join
     ) melhorGravadora
 on gravadora.cod_gravadora = melhorGravadora.id
 
+GO
 
 --c) Listar nome do compositor com maior número de faixas nas playlists existentes.
 
@@ -445,6 +470,8 @@ as
 
 
 --d) Listar playlists, cujas faixas (todas) têm tipo de composição “Concerto” e período “Barroco”
+
+GO
 
 create view playlistsClassicas
 as 
