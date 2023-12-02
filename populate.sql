@@ -174,7 +174,7 @@ INSERT INTO periodo (cod_periodo, comeco, fim, descricao)
 VALUES ('Barroco', '1600-01-01', '1700-12-31', 'Estilo do século 17');
 
 INSERT INTO tipo_de_composicao (cod_tipo_composicao, descricao)
-VALUES ('Classico', 'Classico');
+VALUES ('Conserto', 'Conserto');
 
 --Tabelas dependentes grau 1: Compositor, Album, Telefones
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
@@ -183,9 +183,9 @@ INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao
 VALUES (6, 'Song 1', '00:04:30', 'Rock', 'DDD', 1, 1);
 
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
-VALUES (7, 'Song 1', '00:04:30', 'Classico', 'DDD', 1, 1);
+VALUES (17, 'Song 1', '00:04:30', 'Conserto', 'DDD', 1, 1);
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
-VALUES (8, 'Song 1', '00:04:30', 'Classico', 'DDD', 1, 1);
+VALUES (18, 'Song 1', '00:04:30', 'Conserto', 'DDD', 1, 1);
 
 
 INSERT INTO compositor (cod_compositor, nome, data_de_nascimento, data_de_falecimento, local_nascimento, cod_periodo)
@@ -197,16 +197,19 @@ VALUES (8, 'Composer 2', '1600-01-01', '1700-01-01', 'City, Classico', 'Barroco'
 --Tabelas dependentes grau 2: Midia Fisica, Faixa, tabelas de ligação...
 
 INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
-VALUES (7, 4, 12, '2023-04-15');
+VALUES (17, 4, 12, '2023-04-15');
 INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
-VALUES (8, 4, 12, '2023-04-15');
+VALUES (18, 4, 12, '2023-04-15');
 
 
 
 
 --Playlist só barroco classico
 
+INSERT INTO playlist (cod_playlist, nome, tempo_de_execucao_total, data_criacao)
+VALUES (4, 'Playlist classica', '01:15:00', '2023-03-10');
+
 INSERT INTO compositor_musica (cod_musica, cod_compositor)
-VALUES (8, 7);
+VALUES (17, 7);
 INSERT INTO compositor_musica (cod_musica, cod_compositor)
-VALUES (8, 8);
+VALUES (18, 8);

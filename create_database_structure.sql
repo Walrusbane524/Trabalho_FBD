@@ -443,6 +443,5 @@ as
         full join faixa f               on f.cod_musica = mp.cod_musica
         inner join compositor_musica cm on cm.cod_musica = f.cod_musica 
         inner join compositor c         on c.cod_compositor = cm.cod_compositor
-        inner join periodo p            on p.cod_periodo = c.cod_periodo
-        where c.cod_tipo_composicao != 'Concerto' or p.cod_periodo != 'Barroco'
+        where c.cod_tipo_composicao != 'Concerto' or c.cod_periodo != 'Barroco'
     )
