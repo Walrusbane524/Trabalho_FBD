@@ -393,14 +393,22 @@ select * from gravadora gravadora
 join 
 
     (
-        select top 1 f.cod_gravadora as id, count(p.cod_playlist) as numeroDePlaylists --playlists do dvorac
+        select top 1 f.cod_gravadora as id, count(p.cod_playlist) as numeroDePlaylists 
         from playlist p
         join musica_playlist mp
         on p.cod_playlist = mp.cod_playlist
         full join faixa f
         on f.cod_musica = mp.cod_musica
 
-       
+        where f.cod_musica in (
+
+                --musicas do dvorac
+                select cod_musica 
+                from compositor_musica cm 
+                join compositor c
+                on c.cod_compositor = cm.cod_compositor
+                where c.nome = 'Dvorac'
+        )
 
         group by p.cod_playlist, f.cod_gravadora
 
@@ -411,4 +419,38 @@ join
 on gravadora.cod_gravadora = melhorGravadora.id
 
 
---c)
+--c) Listar nome do compositor com maior número de faixas nas playlists existentes.
+
+create view compositorMaisTrabalhador
+as 
+
+    select * from compositor 
+    join 
+        (
+
+            select top 1 count(f.cod_musica) as numeroDeFaixas, cod_compositor
+            from faixa f
+            inner join compositor_musica cm on cm.cod_musica = f.cod_musica 
+            group by cm.cod_compositor
+            order by numeroDeFaixas desc
+
+        ) compositorMaisPopular
+    on compositor.cod_compositor = compositorMaisPopular.cod_compositor
+
+
+--d) Listar playlists, cujas faixas (todas) têm tipo de composição “Concerto” e período “Barroco”
+
+create view playlistsClassicas
+as 
+
+    select * 
+    from playlist p
+    where not exists --Contrapositiva: Não existe faixa cuja composição não é Conserto e periodo não é barroco
+    (
+        select 0 from musica_playlist mp where mp.cod_playlist = p.cod_playlist
+        full join faixa f               on f.cod_musica = mp.cod_musica
+        inner join compositor_musica cm on cm.cod_musica = f.cod_musica 
+        inner join compositor c         on c.cod_compositor = cm.cod_compositor
+        inner join periodo p            on p.cod_periodo = c.cod_periodo
+        where c.cod_tipo_composicao != 'Concerto' or p.cod_periodo != 'Barroco'
+    )
