@@ -5,14 +5,14 @@ create table gravadora(
     cod_gravadora int primary key,
     Endereco_homepage varchar(255),
     Endereco varchar(255),
-    nome varchar(255),
+    nome varchar(255) not null,
     telefone varchar(20)
 )
 
 create table album(
     cod_album int primary key,
-    tipoCompra varchar(20), 
-    preco decimal(10,2),
+    tipoCompra varchar(20) not null, 
+    preco decimal(10,2) not null,
     data_de_gravacao date check (data_de_gravacao > '2000-01-01'), --Posterior a 2000
     data_da_compra date,
     cod_gravadora int
@@ -37,18 +37,18 @@ create table tipo_de_composicao(
 
 create table interprete(
     cod_interprete int primary key,
-    nome varchar(255),
-    tipo varchar(20)
+    nome varchar(255) not null,
+    tipo varchar(20) not null
 )
 
 create table faixa(
     cod_musica int primary key,
     descricao varchar(255),
-    tempo_de_execucao time,
-    cod_tipo_composicao varchar(20),
-    tipo_gravacao varchar(10),
+    tempo_de_execucao time not null,
+    cod_tipo_composicao varchar(20) not null,
+    tipo_gravacao varchar(10) not null,
     cod_gravadora int,
-    cod_album int
+    cod_album int not null
 
     foreign key(cod_tipo_composicao) references tipo_de_composicao(cod_tipo_composicao),
     foreign key(cod_gravadora)       references gravadora(cod_gravadora),
@@ -58,8 +58,8 @@ create table faixa(
 
 
 create table interprete_musica(
-    cod_interprete int, 
-    cod_musica int ,
+    cod_interprete int not null, 
+    cod_musica int not null,
 
 	foreign key(cod_interprete) references interprete(cod_interprete),
 	foreign key(cod_musica) references faixa(cod_musica)
@@ -67,8 +67,8 @@ create table interprete_musica(
 
 
 create table midia_musica(
-    cod_meio int,
-    cod_musica int,
+    cod_meio int not null,
+    cod_musica int not null,
     numeroFaixa int
 
     foreign key(cod_meio)   references midiaFisica(cod_meio),
@@ -85,7 +85,7 @@ create table periodo(
 
 create table compositor(
     cod_compositor int primary key,
-    nome varchar(255),
+    nome varchar(255) not null,
     data_de_nascimento date,
     data_de_falecimento date,
     local_nascimento varchar(255),
@@ -105,7 +105,7 @@ create table compositor_musica(
 
 create table playlist(
     cod_playlist int primary key,
-    nome varchar(255),
+    nome varchar(255) not null,
     tempo_de_execucao_total time,
     data_criacao date,
 
@@ -273,22 +273,6 @@ as
 begin
     update playlist 
     set playlist.tempo_de_execucao_total = (
-        SELECT CONVERT(TIME, DATEADD(SECOND, SUM(DATEDIFF(SECOND, 0, f.tempo_de_execucao)), 0))
-        FROM faixa f
-        WHERE f.cod_musica = NEW.cod_musica
-    )
-    where inserted.cod_playlist = playlist.cod_playlist
-    
-end
-
-
-
-alter trigger calcularTamanhoPlaylist on musica_playlist
-after insert, update 
-as 
-begin
-    update playlist 
-    set playlist.tempo_de_execucao_total = (
        select CONVERT(TIME, DATEADD(SECOND, SUM(DATEDIFF(SECOND, 0, f.tempo_de_execucao)), 0)) from faixa f 
 		inner join musica_playlist mp
 		on f.cod_musica = mp.cod_musica 
@@ -302,14 +286,6 @@ begin
 	where (playlist.cod_playlist in (select cod_playlist from inserted))
     
 end
-
-
-
-select CONVERT(TIME, DATEADD(SECOND, SUM(DATEDIFF(SECOND, 0, f.tempo_de_execucao)), 0)) from faixa f 
-inner join musica_playlist mp
-on f.cod_musica = mp.cod_musica 
-inner join playlist p
-on p.cod_playlist = mp.cod_playlist
 
 --Quarta condição: Sucesso
 
