@@ -47,5 +47,31 @@ def delete(conn, table, where_dict = {}):
     cursor.close()
     print("Linha deletada com sucesso")
 
+def update(conn, table, set_dict, where_dict):
+    where_str = ", ".join(f"{key} = '{value}'" if isinstance(value, str) else f"{key} = {value}" for key, value in where_dict.items()) if where_dict != {} else ""
+    set_str = ", ".join(f"{key} = '{value}'" if isinstance(value, str) else f"{key} = {value}" for key, value in set_dict.items()) if set_dict != {} else ""
+
+    cursor = conn.cursor()
+    cursor.execute("UPDATE " + table + " SET " + set_str + " WHERE " + where_str)
+    cursor.close()
+
 def close(conn):
     conn.close()
+
+def printList(table_name, dict_list):
+    max_size = 18
+    titles = dict_list[0].keys()
+    hsize = 0
+
+    for title in titles:
+        hsize += max(max_size, len(title))
+    print(f'{table_name:.^{hsize}}')
+
+    for title in titles:
+        print(f'{str(title).center(max(len(title), max_size))}', end='')
+    print()
+
+    for dict in dict_list:
+        for key, value in dict.items():
+            print(f'{str(value).center(max(len(str(value)), len(key), max_size))}', end='')
+        print()
