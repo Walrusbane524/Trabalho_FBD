@@ -20,11 +20,11 @@ VALUES ('Rock', 'Rock genre');
 
 -- Insert data into interprete table
 INSERT INTO interprete (cod_interprete, nome, tipo)
-VALUES (1, 'Artist 1', 1);
+VALUES (1, 'Artist 1', 'Soprano');
 
 -- Insert data into faixa table
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
-VALUES (1, 'Song 1', '00:04:30', 'Rock', 'Studio', 1, 1);
+VALUES (1, 'Song 1', '00:04:30', 'Rock', 'DDD', 1, 1);
 
 -- Insert data into interprete_musica table
 INSERT INTO interprete_musica (cod_interprete, cod_musica)
@@ -77,7 +77,7 @@ VALUES ('Pop', 'Pop genre');
 
 -- Insert data into interprete table
 INSERT INTO interprete (cod_interprete, nome, tipo)
-VALUES (2, 'Singer 2', 1);
+VALUES (2, 'Singer 2', 'Orquestra');
 
 -- Insert data into faixa table
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
@@ -134,7 +134,7 @@ VALUES ('Electronic', 'Electronic genre');
 
 -- Insert data into interprete table
 INSERT INTO interprete (cod_interprete, nome, tipo)
-VALUES (3, 'Artist 3', 2);
+VALUES (3, 'Artist 3', 'Orquestra');
 
 -- Insert data into faixa table
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
@@ -167,3 +167,46 @@ VALUES (3, 'Min Spellista 3', '01:45:00', '2023-04-01');
 -- Insert data into musica_playlist table
 INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
 VALUES (3, 3, 12, '2023-04-15');
+
+
+--Tabelas independentes: Gravadora, Periodo, Interprete, Playlist, Tipo de composição 
+INSERT INTO periodo (cod_periodo, comeco, fim, descricao)
+VALUES ('Barroco', '1600-01-01', '1700-12-31', 'Estilo do século 17');
+
+INSERT INTO tipo_de_composicao (cod_tipo_composicao, descricao)
+VALUES ('Classico', 'Classico');
+
+--Tabelas dependentes grau 1: Compositor, Album, Telefones
+INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
+VALUES (4, 'Song 1', '00:04:30', 'Rock', 'DDD', 1, 1);
+INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
+VALUES (6, 'Song 1', '00:04:30', 'Rock', 'DDD', 1, 1);
+
+INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
+VALUES (7, 'Song 1', '00:04:30', 'Classico', 'DDD', 1, 1);
+INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
+VALUES (8, 'Song 1', '00:04:30', 'Classico', 'DDD', 1, 1);
+
+
+INSERT INTO compositor (cod_compositor, nome, data_de_nascimento, data_de_falecimento, local_nascimento, cod_periodo)
+VALUES (7, 'Composer 2', '1600-01-01', '1700-01-01', 'City, Country', 'Barroco');
+
+INSERT INTO compositor (cod_compositor, nome, data_de_nascimento, data_de_falecimento, local_nascimento, cod_periodo)
+VALUES (8, 'Composer 2', '1600-01-01', '1700-01-01', 'City, Classico', 'Barroco');
+
+--Tabelas dependentes grau 2: Midia Fisica, Faixa, tabelas de ligação...
+
+INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
+VALUES (7, 4, 12, '2023-04-15');
+INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
+VALUES (8, 4, 12, '2023-04-15');
+
+
+
+
+--Playlist só barroco classico
+
+INSERT INTO compositor_musica (cod_musica, cod_compositor)
+VALUES (8, 7);
+INSERT INTO compositor_musica (cod_musica, cod_compositor)
+VALUES (8, 8);

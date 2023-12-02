@@ -44,7 +44,7 @@ create table tipo_de_composicao(
 create table interprete(
     cod_interprete int primary key,
     nome varchar(255),
-    tipo int
+    tipo varchar(20)
 )
 
 create table faixa(
