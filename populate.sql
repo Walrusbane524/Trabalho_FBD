@@ -186,6 +186,8 @@ INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao
 VALUES (17, 'Song 1', '00:04:30', 'Conserto', 'DDD', 1, 1);
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
 VALUES (18, 'Song 1', '00:04:30', 'Conserto', 'DDD', 1, 1);
+INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
+VALUES (19, 'Song 3', '00:14:30', 'Conserto', 'DDD', 1, 1);
 
 
 INSERT INTO compositor (cod_compositor, nome, data_de_nascimento, data_de_falecimento, local_nascimento, cod_periodo)
@@ -200,7 +202,8 @@ INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, u
 VALUES (17, 4, 12, '2023-04-15');
 INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
 VALUES (18, 4, 12, '2023-04-15');
-
+INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
+VALUES (19, 4, 12, '2023-04-15');
 
 
 
@@ -213,3 +216,10 @@ INSERT INTO compositor_musica (cod_musica, cod_compositor)
 VALUES (17, 7);
 INSERT INTO compositor_musica (cod_musica, cod_compositor)
 VALUES (18, 8);
+
+
+INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
+VALUES (21, 'Song 5', '00:24:30', 'Conserto', 'DDD', 1, 1);
+
+INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
+VALUES (21, 4, 12, '2023-04-15');

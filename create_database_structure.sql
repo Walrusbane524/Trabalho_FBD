@@ -272,10 +272,44 @@ after insert, update
 as 
 begin
     update playlist 
-    set playlist.tempo_de_execucao_total = 
+    set playlist.tempo_de_execucao_total = (
+        SELECT CONVERT(TIME, DATEADD(SECOND, SUM(DATEDIFF(SECOND, 0, f.tempo_de_execucao)), 0))
+        FROM faixa f
+        WHERE f.cod_musica = NEW.cod_musica
+    )
     where inserted.cod_playlist = playlist.cod_playlist
     
 end
+
+
+
+alter trigger calcularTamanhoPlaylist on musica_playlist
+after insert, update 
+as 
+begin
+    update playlist 
+    set playlist.tempo_de_execucao_total = (
+       select CONVERT(TIME, DATEADD(SECOND, SUM(DATEDIFF(SECOND, 0, f.tempo_de_execucao)), 0)) from faixa f 
+		inner join musica_playlist mp
+		on f.cod_musica = mp.cod_musica 
+		inner join playlist 
+		on playlist.cod_playlist = mp.cod_playlist
+		inner join inserted
+		on inserted.cod_playlist = playlist.cod_playlist
+	
+		group by playlist.cod_playlist
+    )
+	where (playlist.cod_playlist in (select cod_playlist from inserted))
+    
+end
+
+
+
+select CONVERT(TIME, DATEADD(SECOND, SUM(DATEDIFF(SECOND, 0, f.tempo_de_execucao)), 0)) from faixa f 
+inner join musica_playlist mp
+on f.cod_musica = mp.cod_musica 
+inner join playlist p
+on p.cod_playlist = mp.cod_playlist
 
 --Quarta condição: Sucesso
 
