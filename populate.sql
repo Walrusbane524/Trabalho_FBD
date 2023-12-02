@@ -1,5 +1,6 @@
 --Inserções
 insert into gravadora values(1, 'www.nuclearRecords.com.com.com.com.br', 'Suécia', 'NuclearRecords');
+insert into gravadora values(1, 'www.romanov.com.com.com.com.br', 'Coreia do Oeste', 'Romanov');
 insert into album values(1, 1, 200.84, '2001-03-12', '2003-04-09', 1);
 
 -- Insert data into midiaFisica
@@ -7,11 +8,11 @@ INSERT INTO midiaFisica VALUES (1, 'CD', 1);
 -- Insert data into telefones
 INSERT INTO telefones VALUES (1, 123456789);
 -- Insert data into tipo_de_composicao
-INSERT INTO tipo_de_composicao VALUES ('Rock', 1);
+INSERT INTO tipo_de_composicao VALUES ('Rock', 'O rock foi um...');
 -- Insert data into interprete
 INSERT INTO interprete VALUES (1, 'Interprete1', 1);
 -- Insert data into faixa
-INSERT INTO faixa VALUES ('Faixa1', '00:03:30', 1, 1, 1, 'Estúdio', 1);
+INSERT INTO faixa VALUES (1, 'Faixa1', '00:03:30', 'Jazz', 'Rock', 'Estúdio', 1);
 -- Insert data into interprete_musica
 INSERT INTO interprete_musica VALUES (1, 1);
 -- Insert data into midia_musica
@@ -35,7 +36,7 @@ INSERT INTO midiaFisica VALUES (301, 'Vinyl', 201);
 -- Insert data into telefones
 INSERT INTO telefones VALUES (401, 987654321);
 -- Insert data into tipo_de_composicao
-INSERT INTO tipo_de_composicao VALUES ('Jazz', 301);
+INSERT INTO tipo_de_composicao VALUES ('Jazz', 'O jazz foi um...');
 -- Insert data into interprete
 INSERT INTO interprete VALUES (501, 'Innovative Artist', 2);
 -- Insert data into faixa

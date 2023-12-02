@@ -37,8 +37,8 @@ create table telefones(
 )
 
 create table tipo_de_composicao(
-    descricao varchar(255),
-    cod_tipo_composicao int primary key
+    cod_tipo_composicao char(20) primary key,
+    descricao varchar(255)
 )
 
 create table interprete(
@@ -48,12 +48,12 @@ create table interprete(
 )
 
 create table faixa(
+    cod_musica int primary key,
     descricao varchar(255),
     tempo_de_execucao time,
-    cod_musica int primary key,
-    cod_tipo_composicao int,
-    cod_gravadora int,
+    cod_tipo_composicao char(20),
     tipo_gravacao char(10),
+    cod_gravadora int,
     cod_album int
 
     foreign key(cod_tipo_composicao) references tipo_de_composicao(cod_tipo_composicao),
@@ -159,7 +159,7 @@ begin
 end
 
 --Consertado
-alter trigger precoAlto on album 
+create trigger precoAlto on album 
 for insert, update
 as
 begin
@@ -288,25 +288,17 @@ WITH FILLFACTOR = 100;
 --Quinta condição: Sucesso
 
 
--- Criar a visão materializada
+-- Criar a visão materializada: consertar outer join
 create view visaoPlaylist
 with schemabinding
 as
 select
-    p.nome as nomePlaylist,
-    COUNT(distinct f.cod_album) as albunsDiferentes
-from dbo.playlist p
-join dbo.musica_playlist mp on mp.cod_playlist = p.cod_playlist
-join dbo.faixa f on f.cod_musica = mp.cod_musica
-group by p.nome
-
-union 
-
-select --União com as playlists que não tem músicas
-	p.nome as nomePlaylist,
-	0 as albunsDiferentes
-from dbo.playlist p
-where not exists( select * from dbo.musica_playlist mp where mp.cod_playlist = p.cod_playlist)
+        p.nome AS nomePlaylist,
+        COUNT(DISTINCT f.cod_album) AS albunsDiferentes
+    from dbo.playlist p
+    full join dbo.musica_playlist mp on mp.cod_playlist = p.cod_playlist
+    full join dbo.faixa f on f.cod_musica = mp.cod_musica
+    group by p.nome;
 
 
 --Sexta condição: Sucesso
