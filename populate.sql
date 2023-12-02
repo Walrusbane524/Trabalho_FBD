@@ -1,18 +1,20 @@
 --Tabelas independentes: Gravadora, Periodo, Interprete, Playlist, Tipo de composição 
 
 --Gravadora
-INSERT INTO gravadora (cod_gravadora, Endereco_homepage, Endereco, nome, telefone)
+INSERT INTO gravadora (cod_gravadora, Endereco_homepage, Endereco, nome)
 VALUES
-  (1, 'http://www.example1.com', '123 Main St', 'Record Company 1', '123-456-7890'),
-  (2, 'http://www.example2.com', '456 Oak St', 'Music Producers Ltd', '987-654-3210'),
-  (3, 'http://www.example3.com', '789 Pine St', 'Sound Studios', '111-222-3333'),
-  (4, 'http://www.example4.com', '321 Elm St', 'Melody Creations', '555-666-7777'),
-  (5, 'http://www.example5.com', '567 Birch St', 'Harmony Records', '999-888-7777'),
-  (6, 'http://www.example6.com', '890 Cedar St', 'Rhythm Entertainment', '444-333-2222'),
-  (7, 'http://www.example7.com', '765 Maple St', 'Symphony Productions', '333-444-5555'),
-  (8, 'http://www.example8.com', '432 Fir St', 'Song Crafters', '777-888-9999'),
-  (9, 'http://www.example9.com', '876 Pine St', 'Note Studios', '222-111-0000'),
-  (10, 'http://www.example10.com', '543 Oak St', 'Tune Makers', '666-555-4444');
+  (1, 'http://www.example1.com', '123 Main St', 'Record Company 1'),
+  (2, 'http://www.example2.com', '456 Oak St', 'Music Producers Ltd'),
+  (3, 'http://www.example3.com', '789 Pine St', 'Sound Studios'),
+  (4, 'http://www.example4.com', '321 Elm St', 'Melody Creations'),
+  (5, 'http://www.example5.com', '567 Birch St', 'Harmony Records'),
+  (6, 'http://www.example6.com', '890 Cedar St', 'Rhythm Entertainment'),
+  (7, 'http://www.example7.com', '765 Maple St', 'Symphony Productions'),
+  (8, 'http://www.example8.com', '432 Fir St', 'Song Crafters'),
+  (9, 'http://www.example9.com', '876 Pine St', 'Note Studios'),
+  (10, 'http://www.example10.com', '543 Oak St', 'Tune Makers');
+
+  
 
 --Periodo
 -- Insert data into periodo table
@@ -82,7 +84,33 @@ VALUES ('Barroco', '1600-01-01', '1700-12-31', 'Estilo do século 17');
 INSERT INTO tipo_de_composicao (cod_tipo_composicao, descricao)
 VALUES ('Conserto', 'Conserto');
 
---Tabelas dependentes grau 1: Compositor, Album
+--Tabelas dependentes grau 1: Compositor, Album, Telefone
+
+--Telefone
+
+INSERT INTO telefone (numero, cod_gravadora)
+VALUES
+    ('5551111111', 1),
+    ('5552222222', 2),
+    ('5553333333', 3),
+    ('5554444444', 4),
+    ('5555555555', 5),
+    ('5556666666', 6),
+    ('5557777777', 7),
+    ('5558888888', 8),
+    ('5559999999', 9),
+    ('5551010101', 10),
+    ('5552020202', 1),
+    ('5553030303', 2),
+    ('5554040404', 3),
+    ('5555050505', 4),
+    ('5556060606', 5),
+    ('5557070707', 6),
+    ('5558080808', 7),
+    ('5559090909', 8),
+    ('5551231234', 9),
+    ('5555675678', 10),
+    ('5559876543', 1)
 
 -- Insert data into compositor table
 INSERT INTO compositor (cod_compositor, nome, data_de_nascimento, data_de_falecimento, local_nascimento, cod_periodo)

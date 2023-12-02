@@ -5,9 +5,16 @@ create table gravadora(
     cod_gravadora int primary key,
     Endereco_homepage varchar(255),
     Endereco varchar(255),
-    nome varchar(255) not null,
-    telefone varchar(20)
+    nome varchar(255) not null
 )
+
+create table telefone(
+    numero varchar(10) primary key,
+    cod_gravadora int,
+
+    foreign key(cod_gravadora) references gravadora(cod_gravadora);
+)
+
 
 create table album(
     cod_album int primary key,
