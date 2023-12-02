@@ -5,7 +5,8 @@ create table gravadora(
     cod_gravadora int primary key,
     Endereco_homepage varchar(255),
     Endereco varchar(255),
-    nome varchar(255)
+    nome varchar(255),
+    telefone char(20)
 )
 
 create table album(
@@ -29,13 +30,6 @@ create table midiaFisica(
     --Quando o album é deletado, a midia física também é
     foreign key(cod_album) references album(cod_album) on delete cascade
 )
-
-create table telefones(
-    cod_telefone int primary key,
-    telefone int
-
-)
-
 create table tipo_de_composicao(
     cod_tipo_composicao char(20) primary key,
     descricao varchar(255)
@@ -273,6 +267,16 @@ begin
     
 end;
 
+create trigger calcularTamanhoPlaylist on musica_playlist
+after insert, update 
+as 
+begin
+    update playlist 
+    set playlist.tempo_de_execucao_total = 
+    where inserted.cod_playlist = playlist.cod_playlist
+    
+end
+
 --Quarta condição: Sucesso
 
 CREATE UNIQUE CLUSTERED INDEX IX_Faixa_CodigoAlbum
@@ -439,9 +443,9 @@ as
     from playlist p
     where not exists --Contrapositiva: Não existe faixa cuja composição não é Conserto e periodo não é barroco
     (
-        select 0 from musica_playlist mp where mp.cod_playlist = p.cod_playlist
+        select 0 from musica_playlist mp 
         full join faixa f               on f.cod_musica = mp.cod_musica
         inner join compositor_musica cm on cm.cod_musica = f.cod_musica 
         inner join compositor c         on c.cod_compositor = cm.cod_compositor
-        where c.cod_tipo_composicao != 'Concerto' or c.cod_periodo != 'Barroco'
+        where mp.cod_playlist = p.cod_playlist and c.cod_tipo_composicao != 'Concerto' or c.cod_periodo != 'Barroco'
     )
