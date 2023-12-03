@@ -9,10 +9,10 @@ def buildDict(optional=True):
     if optional:
         print("**Aperte somente enter para pular o input**")
 
-    print("Insira o código do tipo de composição: ", end='')
+    print("Insira o nome do tipo de composição: ", end='')
     user_input = input()
     if user_input != '':
-        dict['cod_tipo_composicao'] = int(user_input)
+        dict['cod_tipo_composicao'] = user_input
     else:
         if not optional:
             print("Insira um valor!")

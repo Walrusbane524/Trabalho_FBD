@@ -36,10 +36,16 @@ def select(conn, table, columns = [], where_dict = {}):
 
 def executeWithReturn(conn, sql_string):
     cursor = conn.cursor()
-    values = cursor.execute(sql_string)
+    cursor.execute(sql_string)
+    rows = cursor.fetchall()
+
+    columns = [desc[0] for desc in cursor.description]
+
+    result_list = [dict(zip(columns, row)) for row in rows]
+
     cursor.close()
     conn.commit()
-    return values
+    return result_list
 
 def insert(conn, table, values):
 

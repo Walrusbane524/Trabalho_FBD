@@ -7,7 +7,7 @@ tabelas = ['album', 'compositor', 'midia_fisica', 'faixa',
            'midia_musica', 'compositor_musica', 'playlist', 
            'musica_playlist', 'gravadora', 'interprete', 
            'interprete_musica', 'tipo_de_composicao', 
-           'telefones', 'sair']
+           'telefones', 'views', 'sair']
 
 def handlePlaylistTrackInsertion(conn, playlist_id, track_id_list):
     musica_playlist_sql = import_module('controllers.sql.musica_playlist')
@@ -205,8 +205,51 @@ def playlistMenu(conn):
         elif input_number == 5:
             playPlaylist(conn)
 
+def viewsFunctionsMenu(conn):
+    compositor_sql_module = import_module('controllers.sql.compositor')
+    view_sql_module = import_module('controllers.sql.views')
+    input_number = 0
+
+    while input_number != 8:
+        print("Tabela escolhida: Views")
+        print("Escolha uma das views ou função para fazer select:")
+        print("1. View: playlistsClassicas")
+        print("2. View: compositorMaisTrabalhador")
+        print("3. View: DvoracEhOMior")
+        print("4. View: albumsCaros")
+        print("5. View: mostrarPlaylistsComMusicas")
+        print("6. View: mostrarAlbunsComFaixas")
+        print("7. View: visaoPlaylist")
+        print("8. Função: ObterAlbumsPorCompositor")
+        print("9. Sair")
+
+        input_number = int(input())
+        if (input_number not in range(1, 10)):
+            print('Insira um número válido!')
+    
+        if input_number == 1:
+            view_sql_module.printList(view_sql_module.selectPlaylistsClassicas(conn))
+        elif input_number == 2:
+            view_sql_module.printList(view_sql_module.selectCompositorMaisTrabalhador(conn))
+        elif input_number == 3:
+            view_sql_module.printList(view_sql_module.selectDvoracEhOMior(conn))
+        elif input_number == 4:
+            view_sql_module.printList(view_sql_module.selectAlbumsCaros(conn))
+        elif input_number == 5:
+            view_sql_module.printList(view_sql_module.selectMostrarPlaylistsComMusicas(conn))
+        elif input_number == 6:
+            view_sql_module.printList(view_sql_module.selectMostrarAlbunsComFaixas(conn))
+        elif input_number == 7:
+            view_sql_module.printList(view_sql_module.selectVisaoPlaylist(conn))
+        elif input_number == 8:
+            print("Insira o nome de um compositor:")
+            compositor_sql_module.printList(compositor_sql_module.select(conn))
+            input_nome = input()
+            view_sql_module.printList(view_sql_module.selectFuncaoObterAlbumsPorCompositor(conn, input_nome))
+        
+
 def escolhaTabela(conn):
-    print("Escolha uma das tabelas (digite o número):")
+    print("\nEscolha uma das tabelas (digite o número):")
     print(" 1. Album")
     print(" 2. Compositor")
     print(" 3. Mídia_fisica")
@@ -220,26 +263,29 @@ def escolhaTabela(conn):
     print("11. Interprete_musica")
     print("12. Tipo_de_composição")
     print("13. Telefones")
-    print("14. Sair")
+    print("14. Views e Funções")
+    print("15. Sair")
 
     input_number = int(input()) - 1
-    if (input_number not in range(0, 15)):
+    while (input_number not in range(0, 16)):
         print('Insira um número válido!')
-        escolhaTabela(conn)
+        input_number = int(input()) - 1
     
     return tabelas[input_number]
 
 def escolherAçãoTabela(conn, tabela):
-    dynamic_input_module = import_module('controllers.input.' + tabela)
-    dynamic_sql_module = import_module('controllers.sql.' + tabela)
-    input_number = 0
-
     if tabela == 'playlist':
         playlistMenu(conn)
+    elif tabela == 'views':
+        viewsFunctionsMenu(conn)
     else: 
+        dynamic_input_module = import_module('controllers.input.' + tabela)
+        dynamic_sql_module = import_module('controllers.sql.' + tabela)
+        input_number = 0
+
         while input_number != 5:
-            print("Tabela escolhida: " + tabela.upper())
-            print("Escolha uma das tabelas (digite o número):")
+            print("\nTabela escolhida: " + tabela.upper())
+            print("\nEscolha uma das opções (digite o número):")
             print("1. Select")
             print("2. Insert")
             print("3. Update")

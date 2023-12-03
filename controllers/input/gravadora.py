@@ -36,15 +36,6 @@ def buildDict(optional=True):
             print("Insira um valor!")
             return buildDict(optional)
 
-    print("Insira a data de gravacao do album: ", end='')
-    user_input = input()
-    if user_input != '':
-        dict['data_de_gravacao'] = user_input
-    else:
-        if not optional:
-            print("Insira um valor!")
-            return buildDict(optional)
-
     print("Insira o nome da gravadora: ", end='')
     user_input = input()
     if user_input != '':

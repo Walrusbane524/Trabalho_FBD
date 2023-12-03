@@ -21,7 +21,7 @@ def buildDict(optional=True):
     print("Insira o nome do interprete nome: ", end='')
     user_input = input()
     if user_input != '':
-        dict['Endereco_homepage'] = user_input
+        dict['nome'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
