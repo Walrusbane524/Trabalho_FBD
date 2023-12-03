@@ -545,3 +545,9 @@ as
         inner join compositor c         on c.cod_compositor = cm.cod_compositor
         where mp.cod_playlist = p.cod_playlist and f.cod_tipo_composicao != 'Concerto' or c.cod_periodo != 'Barroco'
     );
+
+
+    --Falta: on delete cascade para cada tabela intermediária
+    --       testar dois triggers
+    --       testar as views do item 7
+    --       consertar os indices clusterizados do item 4
