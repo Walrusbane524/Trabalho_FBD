@@ -288,8 +288,13 @@ after insert, update
 as 
 begin
     update playlist 
-    set playlist.tempo_de_execucao_total = (
-       select CONVERT(TIME, DATEADD(SECOND, SUM(DATEDIFF(SECOND, 0, f.tempo_de_execucao)), 0)) from faixa f 
+    set playlist.tempo_de_execucao_total = tabelaAtualizada.tempo
+	from (
+    
+        select 
+            CONVERT(TIME, DATEADD(SECOND, SUM(DATEDIFF(SECOND, 0, f.tempo_de_execucao)), 0)) as tempo, 
+            playlist.cod_playlist as id 
+        from faixa f 
 		inner join musica_playlist mp
 		on f.cod_musica = mp.cod_musica 
 		inner join playlist 
@@ -298,9 +303,8 @@ begin
 		on inserted.cod_playlist = playlist.cod_playlist
 	
 		group by playlist.cod_playlist
-    )
-	where (playlist.cod_playlist in (select cod_playlist from inserted))
-    
+    ) tabelaAtualizada
+    where (tabelaAtualizada.id = playlist.cod_playlist)
 end
 
 GO
