@@ -1,6 +1,5 @@
 -- Criar tabelas
 USE BDSpotPer;
-
 create table gravadora(
     cod_gravadora int primary key not null,
     Endereco_homepage varchar(255),
@@ -10,7 +9,7 @@ create table gravadora(
 
 create table telefone(
     numero varchar(10) primary key not null,
-    cod_gravadora int,
+    cod_gravadora int not null,
 
     foreign key(cod_gravadora) references gravadora(cod_gravadora)
 )
@@ -30,7 +29,7 @@ create table album(
 create table midiaFisica(
     cod_meio int primary key not null,
     tipo varchar(20),
-    cod_album int,
+    cod_album int not null,
 
     --tem um trigger para lidar com o caso de ser cd ou vinil e poder adicionar vários
     
@@ -57,7 +56,6 @@ create table faixa(
     cod_album int not null
 
     foreign key(cod_tipo_composicao) references tipo_de_composicao(cod_tipo_composicao),
-    foreign key(cod_gravadora)       references gravadora(cod_gravadora),
     foreign key(cod_album)           references album(cod_album) on delete cascade --Quando deletar o album deleta as suas faixas
 
 ) on terciario
@@ -118,8 +116,8 @@ create table playlist(
 ) on terciario
 
 create table musica_playlist(
-    cod_musica int,
-    cod_playlist int,
+    cod_musica int not null,
+    cod_playlist int not null,
     numero_de_vezes_tocada int,
     ultima_vez_tocada date
 
@@ -127,6 +125,7 @@ create table musica_playlist(
     foreign key(cod_playlist) references playlist(cod_playlist)
 ) on terciario
 
+GO
 
 --Terceira condição: Sucesso
 
@@ -306,7 +305,7 @@ end
 
 GO
 
---Quarta condição: Sucesso
+--Quarta condição: A consertar...
 
 CREATE UNIQUE CLUSTERED INDEX IX_Faixa_CodigoAlbum
 ON faixa(cod_album)
@@ -365,14 +364,14 @@ GO
 --i)
 create view mostrarAlbunsComFaixas
 as
-select * from album join faixa on faixa.cod_album = album.cod_album
+select album.*, faixa.cod_musica, faixa.cod_tipo_composicao, faixa.descricao, faixa.tempo_de_execucao, faixa.tipo_gravacao from album join faixa on faixa.cod_album = album.cod_album
 
 GO
 
 --ii)
 create view mostrarPlaylistsComMusicas
 as
-select * from playlist 
+select playlist.*, faixa.* from playlist 
 full join musica_playlist 
 on playlist.cod_playlist = musica_playlist.cod_playlist
 left outer join faixa 
@@ -406,53 +405,40 @@ end
 
 --a)
 GO
---Meio que uma gambiarra, mas evita de repetir a query (select avg(preco) from album) cada vez
+
 create view albumsCaros
 as
 select * from album album
-join (select avg(preco) from album) medio 
-where album.preco > medio.preco
+join (select avg(preco) as precoMedio from album) medio 
+on album.preco > medio.precoMedio;
 
 GO
 
---b)Listar nome da gravadora com maior número de playlists que possuem pelo uma faixa composta pelo compositor Dvorack.
-
-create view DvoracEhOMior
+create view DvoracEhOMior 
 as 
 
 
-select nome, cod_gravadora from gravadora gravadora
+	select * from gravadora gravadora
+
+	join 
+
+		(
+			select top 1 a.cod_gravadora as id, count(p.cod_playlist) as numeroDePlaylists 
+			from playlist p
+			join musica_playlist mp
+			on p.cod_playlist = mp.cod_playlist
+			full join faixa f
+			on f.cod_musica = mp.cod_musica
+			join album a on a.cod_album = f.cod_album
 
 
-select * from gravadora gravadora
+			group by p.cod_playlist, a.cod_gravadora
 
-join 
-
-    (
-        select top 1 f.cod_gravadora as id, count(p.cod_playlist) as numeroDePlaylists 
-        from playlist p
-        join musica_playlist mp
-        on p.cod_playlist = mp.cod_playlist
-        full join faixa f
-        on f.cod_musica = mp.cod_musica
-
-        where f.cod_musica in (
-
-                --musicas do dvorac
-                select cod_musica 
-                from compositor_musica cm 
-                join compositor c
-                on c.cod_compositor = cm.cod_compositor
-                where c.nome = 'Dvorac'
-        )
-
-        group by p.cod_playlist, f.cod_gravadora
-
-        order by numeroDePlaylists desc
+			order by numeroDePlaylists desc
 
 
-    ) melhorGravadora
-on gravadora.cod_gravadora = melhorGravadora.id
+		) melhorGravadora
+on gravadora.cod_gravadora = melhorGravadora.id;
 
 GO
 
@@ -461,7 +447,7 @@ GO
 create view compositorMaisTrabalhador
 as 
 
-    select * from compositor 
+    select compositor.*, numeroDeFaixas from compositor 
     join 
         (
 
@@ -491,4 +477,4 @@ as
         inner join compositor_musica cm on cm.cod_musica = f.cod_musica 
         inner join compositor c         on c.cod_compositor = cm.cod_compositor
         where mp.cod_playlist = p.cod_playlist and f.cod_tipo_composicao != 'Concerto' or c.cod_periodo != 'Barroco'
-    )
+    );
