@@ -9,7 +9,7 @@ tabelas = ['album', 'compositor', 'midia_fisica', 'faixa',
            'interprete_musica', 'tipo_de_composicao', 
            'telefones', 'sair']
 
-def handleTrackInsertion(conn, playlist_id, track_id_list):
+def handlePlaylistTrackInsertion(conn, playlist_id, track_id_list):
     musica_playlist_sql = import_module('controllers.sql.musica_playlist')
     
     for track_id in track_id_list:
@@ -20,16 +20,38 @@ def handleTrackInsertion(conn, playlist_id, track_id_list):
         mus_play_dict['ultima_vez_tocada'] = "NULL"
         musica_playlist_sql.insert(conn, mus_play_dict.values())
         
+def handlePlaylistTrackDeletion(conn, playlist_id, track_id_list):
+    musica_playlist_sql = import_module('controllers.sql.musica_playlist')
+    
+    for track_id in track_id_list:
+        musica_playlist_sql.delete(conn, {'cod_musica': track_id, 'cod_playlist': playlist_id})
 
-
-def handleTrackSelection(conn, album_id):
-    faixa_sql = import_module('controllers.sql.faixa')
-    print("Insira o código de uma das músicas, aperte 'q' para cancelar ou aperte 'c' para confirmar seleção:")
-    faixa_list = faixa_sql.select(conn, where = {'cod_album': album_id})
-    faixa_sql.printList(faixa_list)
+def handlePlaylistTrackSelection(conn, playlist_id):
+    play_mus_sql = import_module('controllers.sql.musica_playlist')
     faixas_escolhidas = []
     user_input = ''
     while(user_input != 'q'):
+        print("Insira o código de uma das músicas, aperte 'q' para cancelar ou aperte 'c' para confirmar seleção:")
+        play_mus_sql.printList(play_mus_sql.select(conn, where = {'cod_playlist': playlist_id}))
+        print("Faixas selecionadas para deleção:", faixas_escolhidas)
+        user_input = input()
+        if user_input != 'q' and user_input != 'c':
+            try:
+                number_input = int(user_input)
+                faixas_escolhidas.append(number_input)
+            except:
+                print("Insira um valor válido!")
+        elif user_input == 'c':
+            handlePlaylistTrackDeletion(conn, playlist_id, faixas_escolhidas)
+            faixas_escolhidas = []
+
+def handleAlbumTrackSelection(conn, album_id):
+    faixa_sql = import_module('controllers.sql.faixa')
+    faixas_escolhidas = []
+    user_input = ''
+    while(user_input != 'q'):
+        print("Insira o código de uma das músicas, aperte 'q' para cancelar ou aperte 'c' para confirmar seleção:")
+        faixa_sql.printList(faixa_sql.select(conn, where = {'cod_album': album_id}))
         print("Faixas selecionadas:", faixas_escolhidas)
         user_input = input()
         if user_input != 'q' and user_input != 'c':
@@ -41,23 +63,22 @@ def handleTrackSelection(conn, album_id):
         elif user_input == 'c':
             return faixas_escolhidas
 
-def handleAlbumSelection(conn, playlist):
+def handleAlbumSelection(conn, playlist_id):
     album_sql = import_module('controllers.sql.album')
     user_input = ''
     faixas_escolhidas = []
-    print("Insira o código de um dos albuns, aperte 'q' para cancelar ou aperte 'c' para confirmar seleção:")
-    album_list = album_sql.select(conn)
-    album_sql.printList(album_list)
     while user_input != 'q':
+        print("Insira o código de um dos albuns, aperte 'q' para cancelar ou aperte 'c' para confirmar seleção:")
+        album_sql.printList(album_sql.select(conn))
         user_input = input().lower()
         if user_input != 'q' and user_input != 'c':
             try:
                 album_id = int(user_input) 
-                faixas_escolhidas.extend(handleTrackSelection(conn, album_id))
+                faixas_escolhidas.extend(handleAlbumTrackSelection(conn, album_id))
             except:
                 print("Insira um valor válido!")
         elif user_input == 'c':
-             handleTrackInsertion(conn, playlist["cod_playlist"], faixas_escolhidas)
+             handlePlaylistTrackInsertion(conn, playlist_id, faixas_escolhidas)
              print("Inserção concluída")
 
 
@@ -67,10 +88,48 @@ def handlePlaylistCreation(conn):
     print("Deseja já inserir músicas na playlist? (s/n)")
     if input().lower() == 'n':
         return
-    handleAlbumSelection(conn, inserted_playlist)
+    handleAlbumSelection(conn, inserted_playlist['cod_playlist'])
+
+def handlePlaylistMusicUpdate(conn, playlist_id):
+    play_mus_input_module = import_module('controllers.input.musica_playlist')
+    play_mus_sql_module = import_module('controllers.sql.musica_playlist')
+    user_input = 0
+    while user_input != 3:
+        play_mus_sql_module.printList(play_mus_sql_module.select(conn, where={'cod_playlist': playlist_id}))
+        print("Escolha uma das opções:")
+        print("1. Inserir novas músicas à playlist")
+        print("2. Remover músicas da playlist")
+        print("3. Sair")
+        try:
+            user_input = int(input())
+            if user_input == 1:
+                handleAlbumSelection(conn, playlist_id)
+            elif user_input == 2:
+                handlePlaylistTrackSelection(conn, playlist_id)
+            elif user_input != 3:
+                print("Insira um valor válido!")
+        except:
+            print("Insira um valor válido!")
+
 
 def handlePlaylistUpdate(conn):
-    playlist_input = import_module('controllers.input.playlist')
+    playlist_input_module = import_module('controllers.input.playlist')
+    playlist_sql_module = import_module('controllers.sql.playlist')
+    print("Deseja mudar o nome de uma playlist? (s/n)")
+    if input().lower() == 's':
+        playlist_sql_module.printList(playlist_sql_module.select(conn))
+        playlist_input_module.update(conn)
+    user_input = ''
+    while user_input.lower() != 'q':
+        print("Escolha uma playlist para atualizar as músicas ou aperte q para sair:")
+        playlist_sql_module.printList(playlist_sql_module.select(conn))
+        user_input = input()
+        if user_input.lower() != 'q':
+            try:
+                number_input = int(user_input)
+                handlePlaylistMusicUpdate(conn, number_input)
+            except:
+                print("Insira um valor válido")
 
 def playPlaylistTracks(conn, playlist_id):
     play_mus_input_module = import_module('controllers.input.musica_playlist')
@@ -112,7 +171,6 @@ def playPlaylist(conn):
                 print("Insira um valor válido")
 
 
-
 def playlistMenu(conn):
     playlist_input_module = import_module('controllers.input.playlist')
     playlist_sql_module = import_module('controllers.sql.playlist')
@@ -137,7 +195,7 @@ def playlistMenu(conn):
         elif input_number == 2:
             handlePlaylistCreation(conn)
         elif input_number == 3:
-            playlist_input_module.update(conn)
+            handlePlaylistUpdate(conn)
         elif input_number == 4:
             playlist_input_module.delete(conn)
         elif input_number == 5:
