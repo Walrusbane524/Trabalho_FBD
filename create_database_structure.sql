@@ -505,7 +505,7 @@ end
 
 --a)
 GO
-
+--Testado com sucesso
 create view albumsCaros
 as
 select * from album album
@@ -531,6 +531,12 @@ as
 			on f.cod_musica = mp.cod_musica
 			join album a on a.cod_album = f.cod_album
 
+            where f.cod_musica in (
+                    select cod_musica 
+                    from compositor_musica mc 
+                    inner join compositor c
+                    on c.nome like '%dvorac%'
+            )
 
 			group by p.cod_playlist, a.cod_gravadora
 
@@ -543,7 +549,7 @@ on gravadora.cod_gravadora = melhorGravadora.id;
 GO
 
 --c) Listar nome do compositor com maior número de faixas nas playlists existentes.
-
+--Verificada e testada com sucesso
 create view compositorMaisTrabalhador
 as 
 

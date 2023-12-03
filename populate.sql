@@ -116,7 +116,7 @@ VALUES
 INSERT INTO compositor (cod_compositor, nome, data_de_nascimento, data_de_falecimento, local_nascimento, cod_periodo)
 VALUES
   (1, 'John Songsmith', '1970-05-15', NULL, 'City1, Country1', 'P1'),
-  (2, 'Emily Melodymaker', '1985-08-22', NULL, 'City2, Country2', 'P2'),
+  (2, 'Dvorac', '1985-08-22', NULL, 'City2, Country2', 'P2'),
   (3, 'Michael Harmony', '1968-02-10', '2022-06-30', 'City3, Country3', 'P3'),
   (4, 'Sarah Composer', '1990-11-20', NULL, 'City4, Country4', 'P4'),
   (5, 'Daniel Tunebuilder', '1975-04-03', NULL, 'City5, Country5', 'P5'),
@@ -321,9 +321,6 @@ VALUES (18, 18);
 
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_album)
 VALUES (21, 'Song 5', '00:24:30', 'Concerto', 'DDD', 1);
-
-INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
-VALUES (21, 24, 12, '2023-04-15');
 -- USE master;
 -- GO
 -- ALTER DATABASE BDSpotPer 
