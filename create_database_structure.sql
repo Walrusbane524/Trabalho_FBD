@@ -210,19 +210,17 @@ end
 GO
 
 --Consertado
-create trigger limiteTamanho on album
+--Testado com sucesso
+create trigger limiteTamanho on faixa
 for insert, update
 as 
 begin
 	
 	
-	if exists (
-            select 1
-            from faixa f
-			inner join inserted i  on i.cod_album = f.cod_album
-            group by f.cod_album                 -- agrega elas pelo codigo do album
-            having COUNT(*) > 64               -- vê se a quantidade de faixas desse album não excede 64
-        )
+	if     64 < (select count(*) from inserted a
+                inner join faixa on faixa.cod_album = a.cod_album 
+                group by a.cod_album )              -- vê se a quantidade de faixas desse album não excede 64
+        
     begin
         raiserror('Limite de 64 faixas por album excedido',2,2,2);
         rollback
@@ -230,9 +228,18 @@ begin
     
 end
 
+--Crie no javascript vários inserts diferentes, com mais de 64 para um album
+--Ele nega a partir da inserção 64
+-- const util = (vezes, inicial) =>{
+--     let string = "";
+--     for(let i=0; i< vezes;i++) string = string.concat(`(${inicial+i}, 'Track 51', '00:03:45', 'Pop', 'Stereo', 1),`)
+--     return string;
+-- }
+
 GO
 
 --Consertado
+--Testado com sucesso
 create trigger CdVinilDownload on midiaFisica
 for insert, update
 as
@@ -242,13 +249,44 @@ begin
     --Caso ele seja cd ou vinil, permite somente se for o mesmo tipo
     if exists (
         select * from midiaFisica m inner join inserted i on m.cod_album = i.cod_album
-        where (m.tipo = 'download' or i.tipo != m.tipo)
+        where (i.tipo != m.tipo)
     )
+
+    or 1 < any( select count(m.cod_meio) from midiaFisica m 
+                join inserted i on i.cod_album = m.cod_album
+                where m.tipo = 'download'
+                group by m.cod_album)
     begin
 		raiserror('Inserção falha, meio físico incompativel',2,2,2);
         rollback;
     end
 end;
+
+--Teste1 Meios Diferentes: Funciona
+-- INSERT INTO midiaFisica (cod_meio, tipo, cod_album)
+-- VALUES
+--   (100, 'Vinyl', 1)
+-- INSERT INTO album (cod_album, tipoCompra, preco, data_de_gravacao, data_da_compra, cod_gravadora)
+-- VALUES
+--   (1905, 'Digital', 19.99, '2023-05-01', '2023-05-10', 1)
+-- INSERT INTO midiaFisica (cod_meio, tipo, cod_album)
+-- VALUES
+--   (898, 'download', 1905)
+-- INSERT INTO midiaFisica (cod_meio, tipo, cod_album)
+-- VALUES
+--   (899, 'cd', 1905)
+
+--Teste2 Multiplos Downloads
+
+-- INSERT INTO album (cod_album, tipoCompra, preco, data_de_gravacao, data_da_compra, cod_gravadora)
+-- VALUES
+--   (1907, 'Digital', 19.99, '2023-05-01', '2023-05-10', 1)
+-- INSERT INTO midiaFisica (cod_meio, tipo, cod_album)
+-- VALUES
+--   (898, 'download', 1907)
+-- INSERT INTO midiaFisica (cod_meio, tipo, cod_album)
+-- VALUES
+--   (899, 'download', 1907)
 
 GO
 
@@ -507,3 +545,9 @@ as
         inner join compositor c         on c.cod_compositor = cm.cod_compositor
         where mp.cod_playlist = p.cod_playlist and f.cod_tipo_composicao != 'Concerto' or c.cod_periodo != 'Barroco'
     );
+
+
+    --Falta: on delete cascade para cada tabela intermediária
+    --       testar dois triggers
+    --       testar as views do item 7
+    --       consertar os indices clusterizados do item 4
