@@ -82,7 +82,7 @@ INSERT INTO periodo (cod_periodo, comeco, fim, descricao)
 VALUES ('Barroco', '1600-01-01', '1700-12-31', 'Estilo do século 17');
 
 INSERT INTO tipo_de_composicao (cod_tipo_composicao, descricao)
-VALUES ('Conserto', 'Conserto');
+VALUES ('Concerto', 'Concerto');
 
 --Tabelas dependentes grau 1: Compositor, Album, Telefone
 
@@ -148,11 +148,11 @@ INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao
 VALUES (6, 'Song 1', '00:04:30', 'Rock', 'DDD', 1);
 
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_album)
-VALUES (17, 'Song 1', '00:04:30', 'Conserto', 'DDD', 1);
+VALUES (17, 'Song 1', '00:04:30', 'Concerto', 'DDD', 1);
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_album)
-VALUES (18, 'Song 1', '00:04:30', 'Conserto', 'DDD', 1);
+VALUES (18, 'Song 1', '00:04:30', 'Concerto', 'DDD', 1);
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_album)
-VALUES (19, 'Song 3', '00:14:30', 'Conserto', 'DDD', 1);
+VALUES (19, 'Song 3', '00:14:30', 'Concerto', 'DDD', 1);
 
 
 INSERT INTO compositor (cod_compositor, nome, data_de_nascimento, data_de_falecimento, local_nascimento, cod_periodo)
@@ -299,11 +299,6 @@ VALUES
   (52, 9),
   (51, 10)
 
-
-INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
-VALUES (17, 4, 12, '2023-04-15');
-INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
-VALUES (18, 4, 12, '2023-04-15');
 INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
 VALUES (19, 4, 12, '2023-04-15');
 
@@ -313,14 +308,19 @@ VALUES (19, 4, 12, '2023-04-15');
 INSERT INTO playlist (cod_playlist, nome, tempo_de_execucao_total, data_criacao)
 VALUES (24, 'Playlist classica', '01:15:00', '2023-03-10');
 
+INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
+VALUES (17, 24, 12, '2023-04-15');
+INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
+VALUES (18, 24, 12, '2023-04-15');
+
 INSERT INTO compositor_musica (cod_musica, cod_compositor)
-VALUES (17, 7);
+VALUES (17, 17);
 INSERT INTO compositor_musica (cod_musica, cod_compositor)
-VALUES (18, 8);
+VALUES (18, 18);
 
 
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_album)
-VALUES (21, 'Song 5', '00:24:30', 'Conserto', 'DDD', 1);
+VALUES (21, 'Song 5', '00:24:30', 'Concerto', 'DDD', 1);
 
 INSERT INTO musica_playlist (cod_musica, cod_playlist, numero_de_vezes_tocada, ultima_vez_tocada)
 VALUES (21, 24, 12, '2023-04-15');

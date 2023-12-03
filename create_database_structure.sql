@@ -48,13 +48,14 @@ create table interprete(
 )
 
 create table faixa(
-    cod_musica int primary key not null,
+    cod_musica int not null,
     descricao varchar(255),
     tempo_de_execucao time not null,
     cod_tipo_composicao varchar(20) not null,
     tipo_gravacao varchar(10) ,
     cod_album int not null
 
+    constraint chavePrimariaFaixa    primary key (cod_musica)
     foreign key(cod_tipo_composicao) references tipo_de_composicao(cod_tipo_composicao),
     foreign key(cod_album)           references album(cod_album) on delete cascade --Quando deletar o album deleta as suas faixas
 
@@ -401,11 +402,15 @@ GO
 
 --Quarta condição: A consertar...
 
+--Tem que remover a chave primaria da tabela faixa para inserir esse novo indice clusterizado
+-- ALTER TABLE faixa
+-- DROP CONSTRAINT chavePrimariaFaixa;
+
 -- CREATE UNIQUE CLUSTERED INDEX IX_Faixa_CodigoAlbum
 -- ON faixa(cod_album)
 -- WITH FILLFACTOR = 100;
 
--- GO
+-- -- GO
 
 -- CREATE NONCLUSTERED INDEX IX_Faixa_TipoComposicao
 -- ON faixa(cod_tipo_composicao)
@@ -424,8 +429,8 @@ select
         p.nome AS nomePlaylist,
         COUNT(DISTINCT f.cod_album) AS albunsDiferentes
     from dbo.playlist p
-    full join dbo.musica_playlist mp on mp.cod_playlist = p.cod_playlist
-    full join dbo.faixa f on f.cod_musica = mp.cod_musica
+    left outer join dbo.musica_playlist mp on mp.cod_playlist = p.cod_playlist
+    left outer join dbo.faixa f on f.cod_musica = mp.cod_musica
     group by p.nome;
 
 
@@ -559,23 +564,50 @@ as
 --d) Listar playlists, cujas faixas (todas) têm tipo de composição “Concerto” e período “Barroco”
 
 GO
-
+--Verificada e Testada com sucesso
 create view playlistsClassicas
 as 
 
-    select * 
-    from playlist p
-    where not exists --Contrapositiva: Não existe faixa cuja composição não é Conserto e periodo não é barroco
-    (
-        select 0 from musica_playlist mp 
-        full join faixa f               on f.cod_musica = mp.cod_musica
-        inner join compositor_musica cm on cm.cod_musica = f.cod_musica 
-        inner join compositor c         on c.cod_compositor = cm.cod_compositor
-        where mp.cod_playlist = p.cod_playlist and f.cod_tipo_composicao != 'Concerto' or c.cod_periodo != 'Barroco'
-    );
+    -- select *  versão mais simples, mas que não funciona
+    -- from playlist p
+    -- where not exists --Contrapositiva: Não existe faixa cuja composição não é Conserto e periodo não é barroco
+    -- (
+    --     select 0 from musica_playlist mp 
+    --     full join faixa f               on f.cod_musica = mp.cod_musica
+    --     inner join compositor_musica cm on cm.cod_musica = f.cod_musica 
+    --     inner join compositor c         on c.cod_compositor = cm.cod_compositor
+    --     where mp.cod_playlist = p.cod_playlist and f.cod_tipo_composicao != 'Concerto' or c.cod_periodo != 'Barroco'
+    -- );
+
+
+    select * from playlist p inner join
+
+(	select 
+		p.cod_playlist, 
+		count(distinct f.cod_musica) as faixas
+	from playlist p 
+	inner join musica_playlist mm
+	on p.cod_playlist = mm.cod_playlist 
+	inner join faixa f 
+	on f.cod_musica = mm.cod_musica 
+	inner join compositor_musica cm 
+	on cm.cod_musica = f.cod_musica 
+	inner join compositor c 
+	on c.cod_compositor = cm.cod_compositor
+	where f.cod_tipo_composicao = 'Concerto' or c.cod_periodo = 'Barroco'
+	group by p.cod_playlist
+	) classica
+on classica.cod_playlist = p.cod_playlist
+
+where classica.faixas = ( --Verificando o número de faixas é igual, se não é porque alguma faixa não satisfez a condição
+	select count(f.cod_musica) 
+	from musica_playlist mm 
+	inner join faixa f 
+	on f.cod_musica = mm.cod_musica
+	where mm.cod_playlist = p.cod_playlist)
+
 
 
     --Falta: on delete cascade para cada tabela intermediária
-    --       testar dois triggers
     --       testar as views do item 7
     --       consertar os indices clusterizados do item 4
