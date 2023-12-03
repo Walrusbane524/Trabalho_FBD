@@ -95,7 +95,11 @@ def handlePlaylistMusicUpdate(conn, playlist_id):
     play_mus_sql_module = import_module('controllers.sql.musica_playlist')
     user_input = 0
     while user_input != 3:
-        play_mus_sql_module.printList(play_mus_sql_module.select(conn, where={'cod_playlist': playlist_id}))
+        music_lisc = play_mus_sql_module.select(conn, where={'cod_playlist': playlist_id})
+        if len(music_lisc) > 0:
+            play_mus_sql_module.printList(music_lisc)
+        else:
+            print("Playlist vazia")
         print("Escolha uma das opções:")
         print("1. Inserir novas músicas à playlist")
         print("2. Remover músicas da playlist")
@@ -125,10 +129,10 @@ def handlePlaylistUpdate(conn):
         playlist_sql_module.printList(playlist_sql_module.select(conn))
         user_input = input()
         if user_input.lower() != 'q':
-            try:
+            #try:
                 number_input = int(user_input)
                 handlePlaylistMusicUpdate(conn, number_input)
-            except:
+            #except:
                 print("Insira um valor válido")
 
 def playPlaylistTracks(conn, playlist_id):

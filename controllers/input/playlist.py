@@ -90,5 +90,7 @@ def update(conn):
         print("Deve haver pelo menos uma coluna a ser modificada!")
         set_dict = buildDict()
 
+    set_dict = {'cod_playlist': set_dict['cod_playlist'], 'nome': set_dict['nome']}
+
     playlist.update(conn, set_dict, where_dict)
     print("Delete bem-sucedido!")

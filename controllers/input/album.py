@@ -1,6 +1,6 @@
 import controllers.sql.album as album
 
-# COLUMNS = ['cod_album', 'tipo', 'preco', 'data_de_gravacao', 'data_da_compra', 'cod_gravadora']
+# COLUMNS = ['cod_album', 'tipoCompra', 'preco', 'data_de_gravacao', 'data_da_compra', 'cod_gravadora']
 
 def buildDict(optional=True):
     dict = {}
@@ -18,10 +18,10 @@ def buildDict(optional=True):
             print("Insira um valor!")
             return buildDict(optional)
 
-    print("Insira o tipo do album: ", end='')
+    print("Insira o tipo da compra: ", end='')
     user_input = input()
     if user_input != '':
-        dict['tipo'] = int(user_input)
+        dict['tipoCompra'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
@@ -30,7 +30,7 @@ def buildDict(optional=True):
     print("Insira o preco do album: ", end='')
     user_input = input()
     if user_input != '':
-        dict['preco'] = float(input)
+        dict['preco'] = float(user_input)
     else:
         if not optional:
             print("Insira um valor!")
@@ -39,7 +39,7 @@ def buildDict(optional=True):
     print("Insira a data de gravacao do album: ", end='')
     user_input = input()
     if user_input != '':
-        dict['data_de_gravacao'] = input
+        dict['data_de_gravacao'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
@@ -48,7 +48,7 @@ def buildDict(optional=True):
     print("Insira a data de compra do album: ", end='')
     user_input = input()
     if user_input!= '':
-        dict['data_da_compra'] = input
+        dict['data_da_compra'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
@@ -57,7 +57,7 @@ def buildDict(optional=True):
     print("Insira o código da gravadora do album: ", end='')
     user_input = input()
     if user_input != '':
-        dict['cod_gravadora'] = int(input)
+        dict['cod_gravadora'] = int(user_input)
     else:
         if not optional:
             print("Insira um valor!")
