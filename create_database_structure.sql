@@ -473,7 +473,7 @@ as
 
         ) compositorMaisPopular
     on compositor.cod_compositor = compositorMaisPopular.cod_compositor
-
+    
 
 --d) Listar playlists, cujas faixas (todas) têm tipo de composição “Concerto” e período “Barroco”
 
