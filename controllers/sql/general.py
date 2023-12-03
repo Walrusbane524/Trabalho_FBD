@@ -13,13 +13,13 @@ def connect(database="BDSpotPer", server="WALRUSBANE"):
 
 def select(conn, table, columns = [], where_dict = {}):
     
-    where_str = ", ".join(f"{key} = '{value}'" if isinstance(value, str) else f"{key} = {value}" for key, value in where_dict.items()) if where_dict != {} else ""
+    where_str = " AND ".join(f"{key} = '{value}'" if isinstance(value, str) else f"{key} = {value}" for key, value in where_dict.items()) if where_dict != {} else ""
     columns_str = ", ".join(column for column in columns) if columns != [] else "*"
 
     cursor = conn.cursor()
 
     query_string = "SELECT " + columns_str + " FROM " + table + ("" if where_str == "" else " WHERE " + where_str)
-    print(query_string)
+    #print(query_string)
 
     cursor.execute(query_string)
     
@@ -55,7 +55,7 @@ def insert(conn, table, values):
 
 def delete(conn, table, where_dict = {}):
 
-    where_str = ", ".join(f"{key} = '{value}'" if isinstance(value, str) and value != 'NULL' else f"{key} = {value}" for key, value in where_dict.items()) if where_dict != {} else ""
+    where_str = " AND ".join(f"{key} = '{value}'" if isinstance(value, str) and value != 'NULL' else f"{key} = {value}" for key, value in where_dict.items()) if where_dict != {} else ""
 
     cursor = conn.cursor()
     cursor.execute("DELETE FROM " + table + " WHERE " + where_str)
@@ -64,11 +64,15 @@ def delete(conn, table, where_dict = {}):
     print("Linha deletada com sucesso")
 
 def update(conn, table, set_dict, where_dict):
-    where_str = ", ".join(f"{key} = '{value}'" if isinstance(value, str) else f"{key} = {value}" for key, value in where_dict.items()) if where_dict != {} else ""
+    where_str = " AND ".join(f"{key} = '{value}'" if isinstance(value, str) else f"{key} = {value}" for key, value in where_dict.items()) if where_dict != {} else ""
     set_str = ", ".join(f"{key} = '{value}'" if isinstance(value, str) else f"{key} = {value}" for key, value in set_dict.items()) if set_dict != {} else ""
 
     cursor = conn.cursor()
-    cursor.execute("UPDATE " + table + " SET " + set_str + " WHERE " + where_str)
+
+    query_string = "UPDATE " + table + " SET " + set_str + " WHERE " + where_str
+    print(query_string)
+
+    cursor.execute(query_string)
     cursor.close()
     conn.commit()
     print("Linha editada com sucesso")
