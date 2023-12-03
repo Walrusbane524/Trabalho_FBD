@@ -52,7 +52,7 @@ create table faixa(
     descricao varchar(255),
     tempo_de_execucao time not null,
     cod_tipo_composicao varchar(20) not null,
-    tipo_gravacao varchar(10) not null,
+    tipo_gravacao varchar(10) ,
     cod_album int not null
 
     foreign key(cod_tipo_composicao) references tipo_de_composicao(cod_tipo_composicao),
@@ -65,8 +65,8 @@ create table interprete_musica(
     cod_interprete int not null, 
     cod_musica int not null,
 
-	foreign key(cod_interprete) references interprete(cod_interprete),
-	foreign key(cod_musica) references faixa(cod_musica)
+	foreign key(cod_interprete) references interprete(cod_interprete) on delete cascade,
+	foreign key(cod_musica) references faixa(cod_musica) on delete cascade
 )
 
 
@@ -75,8 +75,8 @@ create table midia_musica(
     cod_musica int not null,
     numeroFaixa int
 
-    foreign key(cod_meio)   references midiaFisica(cod_meio),
-    foreign key(cod_musica) references faixa(cod_musica) on delete cascade
+    foreign key(cod_meio)   references midiaFisica(cod_meio) on delete cascade,
+    foreign key(cod_musica) references faixa(cod_musica)
 )
 
 
@@ -103,8 +103,8 @@ create table compositor_musica(
     cod_musica int, 
     cod_compositor int,
 
-	foreign key(cod_musica) references faixa(cod_musica),
-	foreign key(cod_compositor) references compositor(cod_compositor)
+	foreign key(cod_musica) references faixa(cod_musica) on delete cascade,
+	foreign key(cod_compositor) references compositor(cod_compositor) on delete cascade
 )
 
 create table playlist(
@@ -121,8 +121,8 @@ create table musica_playlist(
     numero_de_vezes_tocada int,
     ultima_vez_tocada date
 
-    foreign key(cod_musica)   references faixa(cod_musica),
-    foreign key(cod_playlist) references playlist(cod_playlist)
+    foreign key(cod_musica)   references faixa(cod_musica) on delete cascade,
+    foreign key(cod_playlist) references playlist(cod_playlist) on delete cascade
 ) on terciario
 
 GO
@@ -217,7 +217,7 @@ as
 begin
 	
 	
-	if     64 < (select count(*) from inserted a
+	if     64 < all(select count(*) from inserted a
                 inner join faixa on faixa.cod_album = a.cod_album 
                 group by a.cod_album )              -- vê se a quantidade de faixas desse album não excede 64
         
@@ -291,6 +291,7 @@ end;
 GO
 
 --Consertado
+--Testado
 create trigger deletarMeioFisico on faixa
 for delete
 as
@@ -312,8 +313,10 @@ end;
 
 GO
 
+
 --Consertado
-create trigger tipoGravacao on faixa
+--Testado com sucesso
+create trigger tipoGravacao on midia_musica
 for insert, update
 as
 begin
@@ -328,12 +331,12 @@ begin
 
 
     insert into @gravacao select tipo_gravacao 
-    from inserted
+    from inserted inner join faixa on inserted.cod_musica = faixa.cod_musica
 
 	if exists( 
 		select * from @meio, @gravacao
-		where (tipo = 'CD' and tipo_gravacao is null) or (tipo_gravacao is not null)
-	)
+		where ((tipo = 'CD' and not (tipo_gravacao = 'DDD' or tipo_gravacao = 'ADD'))) or (tipo != 'CD' and tipo_gravacao is not null)
+)
 	begin
 		raiserror('CD com gravação nula ou Vinil/download com gravação: INVALIDO',2,2,2);
 		rollback
@@ -341,6 +344,22 @@ begin
 
     
 end;
+
+--Teste Validado
+--Inserindo no vinil um valor não nulo, rejeita como esperado
+-- INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_album)
+-- VALUES (6, 'Song 1', '00:04:30', 'Rock', 'DDD', 1);
+-- INSERT INTO midia_musica (cod_musica, cod_meio, numeroFaixa)
+-- VALUES
+--   (4223, 2, 1)
+
+-- select tipo, tipo_gravacao, f.*
+-- from midiaFisica m
+-- inner join midia_musica mm on m.cod_meio = mm.cod_meio
+-- inner join faixa f on f.cod_musica = mm.cod_musica
+-- where (not (tipo = 'CD' and (tipo_gravacao = 'DDD' or tipo_gravacao = 'ADD'))) and (tipo != 'CD' and tipo_gravacao is not null)
+
+
 
 GO
 
@@ -374,15 +393,15 @@ GO
 
 --Quarta condição: A consertar...
 
-CREATE UNIQUE CLUSTERED INDEX IX_Faixa_CodigoAlbum
-ON faixa(cod_album)
-WITH FILLFACTOR = 100;
+-- CREATE UNIQUE CLUSTERED INDEX IX_Faixa_CodigoAlbum
+-- ON faixa(cod_album)
+-- WITH FILLFACTOR = 100;
 
-GO
+-- GO
 
-CREATE NONCLUSTERED INDEX IX_Faixa_TipoComposicao
-ON faixa(cod_tipo_composicao)
-WITH FILLFACTOR = 100;
+-- CREATE NONCLUSTERED INDEX IX_Faixa_TipoComposicao
+-- ON faixa(cod_tipo_composicao)
+-- WITH FILLFACTOR = 100;
 
 
 --Quinta condição: Sucesso
@@ -407,6 +426,7 @@ select
 GO
 
 -- Criar a função
+--Testado com sucesso
 create function ObterAlbumsPorCompositor
 (
     @NomeCompositor varchar(255)

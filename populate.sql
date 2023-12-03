@@ -179,26 +179,26 @@ VALUES
 
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_album)
 VALUES
-  (51, 'Track 51', '00:03:45', 'Pop', 'Stereo', 1),
-  (52, 'Track 52', '00:04:30', 'Rock', 'Stereo', 2),
-  (53, 'Track 53', '00:02:15', 'Jazz', 'Mono', 3),
-  (54, 'Track 54', '00:03:20', 'Electronic', 'Stereo', 4),
-  (55, 'Track 55', '00:04:10', 'Hip-Hop', 'Stereo', 5),
-  (56, 'Track 56', '00:02:45', 'Classical', 'Mono', 6),
-  (57, 'Track 57', '00:03:30', 'Country', 'Stereo', 7),
-  (58, 'Track 58', '00:04:00', 'Blues', 'Stereo', 8),
-  (59, 'Track 59', '00:03:15', 'R&B', 'Stereo', 9),
-  (60, 'Track 60', '00:02:50', 'Indie', 'Mono',  10),
-  (61, 'Track 61', '00:03:40', 'Pop', 'Stereo', 1),
-  (62, 'Track 62', '00:04:25', 'Rock', 'Stereo', 2),
-  (63, 'Track 63', '00:02:10', 'Jazz', 'Mono', 3),
-  (64, 'Track 64', '00:03:15', 'Electronic', 'Stereo', 4),
-  (65, 'Track 65', '00:04:05', 'Hip-Hop', 'Stereo', 5),
-  (66, 'Track 66', '00:02:40', 'Classical', 'Mono', 6),
-  (67, 'Track 67', '00:03:25', 'Country', 'Stereo', 7),
-  (68, 'Track 68', '00:03:55', 'Blues', 'Stereo', 8),
-  (69, 'Track 69', '00:03:10', 'R&B', 'Stereo', 9),
-  (70, 'Track 70', '00:02:45', 'Indie', 'Mono',  10);
+  (51, 'Track 51', '00:03:45', 'Pop', null, 1),
+  (52, 'Track 52', '00:04:30', 'Rock', 'DDD', 2),
+  (53, 'Track 53', '00:02:15', 'Jazz', null, 3),
+  (54, 'Track 54', '00:03:20', 'Electronic', 'DDD', 4),
+  (55, 'Track 55', '00:04:10', 'Hip-Hop', null, 5),
+  (56, 'Track 56', '00:02:45', 'Classical', 'ADD', 6),
+  (57, 'Track 57', '00:03:30', 'Country', null, 7),
+  (58, 'Track 58', '00:04:00', 'Blues', 'DDD', 8),
+  (59, 'Track 59', '00:03:15', 'R&B', null, 9),
+  (60, 'Track 60', '00:02:50', 'Indie', 'ADD',  10),
+  (61, 'Track 61', '00:03:40', 'Pop', null, 1),
+  (62, 'Track 62', '00:04:25', 'Rock', 'DDD', 2),
+  (63, 'Track 63', '00:02:10', 'Jazz', null, 3),
+  (64, 'Track 64', '00:03:15', 'Electronic', 'DDD', 4),
+  (65, 'Track 65', '00:04:05', 'Hip-Hop', null, 5),
+  (66, 'Track 66', '00:02:40', 'Classical', 'ADD', 6),
+  (67, 'Track 67', '00:03:25', 'Country', null, 7),
+  (68, 'Track 68', '00:03:55', 'Blues', 'DDD', 8),
+  (69, 'Track 69', '00:03:10', 'R&B', null, 9),
+  (70, 'Track 70', '00:02:45', 'Indie', 'ADD',  10);
 
 -- Insert data into musica_playlist table with cod_musica values from 50 to 70
 -- Insert data into musica_playlist table with cod_musica values from 50 to 70 and cod_playlist values looping from 1 to 10
@@ -331,13 +331,3 @@ VALUES (21, 24, 12, '2023-04-15');
 -- WITH ROLLBACK IMMEDIATE;
 -- GO
 -- DROP DATABASE BDSpotPer;
-
-INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_album)
-VALUES (193, 'Song 3', '00:14:30', 'Conserto', 'TESTE', 1);
-
-INSERT INTO compositor (cod_compositor, nome, data_de_nascimento, data_de_falecimento, local_nascimento, cod_periodo)
-VALUES (173, 'Composer 2', '1600-01-01', '1700-01-01', 'City, Country', 'Barroco');
-
-INSERT INTO compositor_musica (cod_musica, cod_compositor)
-VALUES
-  (193,173)
