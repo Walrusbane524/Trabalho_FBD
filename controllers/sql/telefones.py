@@ -1,6 +1,6 @@
 import controllers.sql.general as sql
 
-TABLENAME = "telefones"
+TABLENAME = "telefone"
 
 def select(conn, columns = [], where = {}):
     return sql.select(conn, TABLENAME, columns=columns, where_dict=where)

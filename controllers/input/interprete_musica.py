@@ -2,7 +2,7 @@ import controllers.sql.interprete_musica as interp_mus
 
 # COLUMNS = ['cod_interprete', 'cod_musica']
 
-def buildDict():
+def buildDict(optional = True):
     dict = {}
     user_input = ''
 
@@ -11,42 +11,50 @@ def buildDict():
     if user_input != '':
         dict['cod_interprete'] = int(user_input)
     else:
-        print("Insira um valor!")
-        return buildDict()
+        if not optional:
+            print("Insira um valor!")
+            return buildDict()
 
     print("Insira o código da música: ", end='')
     user_input = input()
     if user_input != '':
         dict['cod_musica'] = int(user_input)
     else:
-        print("Insira um valor!")
-        return buildDict()
+        if not optional:
+            print("Insira um valor!")
+            return buildDict()
 
     return dict
     
 def select(conn):
     print("Insira os valores da condição de select:\n")
-    dict = buildDict(True)
+    dict = buildDict()
     return interp_mus.select(conn, where=dict)
 
 def insert(conn):
     print("Insira os valores para o novo álbum:\n")
-    dict = buildDict()
+    dict = buildDict(False)
     interp_mus.insert(conn, dict.values())
     print("Insert bem-sucedido!")
 
 def delete(conn):
     print("Insira os valores da condição para deleção:\n")
     where_dict = buildDict()
+    while where_dict == {}:
+        print("A condição de deleção não pode ser vazia!")
+        where_dict = buildDict()
     interp_mus.delete(conn, where_dict)
     print("Delete bem-sucedido!")
 
 def update(conn):
     print("Insira os valores da condição de update:\n")
+    while where_dict == {}:
+        print("A condição de update não pode ser vazia!")
+        where_dict = buildDict()
     where_dict = buildDict()
     
     print("Insira os valores de update:\n")
-    set_dict = buildDict()
+    set_dict = buildDict(False)
 
     interp_mus.update(conn, set_dict, where_dict)
     print("Delete bem-sucedido!")

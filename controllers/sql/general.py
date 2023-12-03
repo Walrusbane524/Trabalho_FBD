@@ -47,7 +47,12 @@ def insert(conn, table, values):
 
     #print(values_str)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO " + table + " VALUES (" + values_str + ")")
+
+    query_str = "INSERT INTO " + table + " VALUES (" + values_str + ")"
+
+    print(query_str)
+
+    cursor.execute(query_str)
     cursor.close()
 
     conn.commit()

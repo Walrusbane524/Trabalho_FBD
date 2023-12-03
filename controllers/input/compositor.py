@@ -21,7 +21,7 @@ def buildDict(optional=True):
     print("Insira o nome do compositor: ", end='')
     user_input = input()
     if user_input != '':
-        dict['nome'] = input
+        dict['nome'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
@@ -54,10 +54,10 @@ def buildDict(optional=True):
             print("Insira um valor!")
             return buildDict(optional)
 
-    print("Insira o código do período do compositor: ", end='')
+    print("Insira o período do compositor: ", end='')
     user_input = input()
     if user_input != '':
-        dict['cod_periodo'] = int(user_input)
+        dict['cod_periodo'] = user_input
     else:
         if not optional:
             print("Insira um valor!")

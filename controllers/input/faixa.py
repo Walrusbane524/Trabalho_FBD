@@ -1,6 +1,6 @@
 import controllers.sql.faixa as faixa
 
-# COLUMNS = ['cod_musica', 'descricao', 'tempo_de_execucao', 'tipo_gravacao', 'cod_tipo_composicao', 'cod_gravadora', 'cod_album']
+# COLUMNS = ['cod_musica', 'descricao', 'tempo_de_execucao', 'cod_tipo_composicao', 'tipo_gravacao', 'cod_album']
 
 def buildDict(optional=True):
     dict = {}
@@ -35,29 +35,20 @@ def buildDict(optional=True):
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
+    
+    print("Insira o código do tipo de composição da música: ", end='')
+    user_input = input()
+    if user_input != '':
+        dict['cod_tipo_composicao'] = user_input
+    else:
+        if not optional:
+            print("Insira um valor!")
+            return buildDict(optional)
 
     print("Insira a tipo de gravacao da música: ", end='')
     user_input = input()
     if user_input != '':
         dict['tipo_gravacao'] = user_input
-    else:
-        if not optional:
-            print("Insira um valor!")
-            return buildDict(optional)
-    
-    print("Insira o código do tipo de composição da música: ", end='')
-    user_input = input()
-    if user_input != '':
-        dict['cod_tipo_composicao'] = int(user_input)
-    else:
-        if not optional:
-            print("Insira um valor!")
-            return buildDict(optional)
-
-    print("Insira o código da gravadora da música: ", end='')
-    user_input = input()
-    if user_input != '':
-        dict['cod_gravadora'] = int(user_input)
     else:
         if not optional:
             print("Insira um valor!")
