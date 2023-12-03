@@ -315,30 +315,38 @@ GO
 
 
 --Consertado
+
 --Testado com sucesso
 create trigger tipoGravacao on midia_musica
 for insert, update
 as
 begin
 
-    declare @meio table(tipo varchar(20))
-    declare @gravacao table(tipo_gravacao varchar(10));
+    declare @meio table(tipo varchar(20), cod_musica int)
+    declare @gravacao table(tipo_gravacao varchar(10), cod_musica int);
 
-    insert into @meio select tipo 
+    insert into @meio select tipo, cod_musica
     from midiaFisica m
-	inner join midia_musica mm on m.cod_meio = mm.cod_meio
-	where cod_musica in (select cod_musica from inserted)
-
-
-    insert into @gravacao select tipo_gravacao 
+	inner join inserted mm on m.cod_meio = mm.cod_meio
+	
+    insert into @gravacao select tipo_gravacao , inserted.cod_musica
     from inserted inner join faixa on inserted.cod_musica = faixa.cod_musica
 
 	if exists( 
-		select * from @meio, @gravacao
-		where ((tipo = 'CD' and not (tipo_gravacao = 'DDD' or tipo_gravacao = 'ADD'))) or (tipo != 'CD' and tipo_gravacao is not null)
+		select * from @meio m inner join @gravacao g on m.cod_musica = g.cod_musica
+		where ((tipo = 'CD' and not (tipo_gravacao = 'DDD' or tipo_gravacao = 'ADD')))
 )
 	begin
-		raiserror('CD com gravação nula ou Vinil/download com gravação: INVALIDO',2,2,2);
+		raiserror('CD com gravação invalida',2,2,2);
+		rollback
+	end
+
+    if exists( 
+		select * from @meio m inner join @gravacao g on m.cod_musica = g.cod_musica
+		where (tipo != 'CD' and tipo_gravacao is not null)
+)
+	begin
+		raiserror('Vinil/Download com tipo de gravação: Invalido',2,2,2);
 		rollback
 	end
 
@@ -346,7 +354,7 @@ begin
 end;
 
 --Teste Validado
---Inserindo no vinil um valor não nulo, rejeita como esperado
+-- Inserindo no vinil um valor não nulo, rejeita como esperado
 -- INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_album)
 -- VALUES (6, 'Song 1', '00:04:30', 'Rock', 'DDD', 1);
 -- INSERT INTO midia_musica (cod_musica, cod_meio, numeroFaixa)
