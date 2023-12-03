@@ -4,33 +4,33 @@ import controllers.sql.telefones as telefones
 
 def buildDict(optional=True):
     dict = {}
-    input = ''
+    user_input = ''
     
     if optional:
         print("**Aperte somente enter para pular o input**")
 
     print("Insira o código do telefone: ", end='')
-    input = input()
-    if input != '':
-        dict['cod_telefone'] = int(input)
+    user_input = user_input()
+    if user_input != '':
+        dict['cod_telefone'] = int(user_input)
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira o telefone: ", end='')
-    input = input()
-    if input != '':
-        dict['telefone'] = input
+    user_input = input()
+    if user_input != '':
+        dict['telefone'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira o código da gravadora: ", end='')
-    input = input()
-    if input != '':
-        dict['cod_gravadora'] = input
+    user_input = input()
+    if user_input != '':
+        dict['cod_gravadora'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
@@ -38,12 +38,16 @@ def buildDict(optional=True):
 
     return dict
     
+def select(conn):
+    print("Insira os valores da condição de select:\n")
+    dict = buildDict(True)
+    return telefones.select(conn, where=dict)
+
 def insert(conn):
     print("Insira os valores para o novo álbum:\n")
     dict = buildDict(False)
-    telefones.insert(conn, dict)
+    telefones.insert(conn, dict.values())
     print("Insert bem-sucedido!")
-    
 
 def delete(conn):
     print("Insira os valores da condição para deleção:\n")

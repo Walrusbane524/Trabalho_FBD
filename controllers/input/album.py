@@ -4,32 +4,32 @@ import controllers.sql.album as album
 
 def buildDict(optional=True):
     dict = {}
-    input = ''
+    user_input = ''
     
     if optional:
         print("**Aperte somente enter para pular o input**")
 
     print("Insira o código do album: ", end='')
-    input = input()
-    if input != '':
-        dict['cod_album'] = int(input)
+    user_input = input()
+    if user_input != '':
+        dict['cod_album'] = int(user_input)
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira o tipo do album: ", end='')
-    input = input()
-    if input != '':
-        dict['tipo'] = int(input)
+    user_input = input()
+    if user_input != '':
+        dict['tipo'] = int(user_input)
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira o preco do album: ", end='')
-    input = input()
-    if input != '':
+    user_input = input()
+    if user_input != '':
         dict['preco'] = float(input)
     else:
         if not optional:
@@ -37,8 +37,8 @@ def buildDict(optional=True):
             return buildDict(optional)
 
     print("Insira a data de gravacao do album: ", end='')
-    input = input()
-    if input != '':
+    user_input = input()
+    if user_input != '':
         dict['data_de_gravacao'] = input
     else:
         if not optional:
@@ -46,8 +46,8 @@ def buildDict(optional=True):
             return buildDict(optional)
 
     print("Insira a data de compra do album: ", end='')
-    input = input()
-    if input != '':
+    user_input = input()
+    if user_input!= '':
         dict['data_da_compra'] = input
     else:
         if not optional:
@@ -55,8 +55,8 @@ def buildDict(optional=True):
             return buildDict(optional)
 
     print("Insira o código da gravadora do album: ", end='')
-    input = input()
-    if input != '':
+    user_input = input()
+    if user_input != '':
         dict['cod_gravadora'] = int(input)
     else:
         if not optional:
@@ -64,11 +64,16 @@ def buildDict(optional=True):
             return buildDict(optional)
 
     return dict
-    
+
+def select(conn):
+    print("Insira os valores da condição de select:\n")
+    dict = buildDict(True)
+    return album.select(conn, where=dict)
+
 def insert(conn):
     print("Insira os valores para o novo álbum:\n")
     dict = buildDict(False)
-    album.insert(conn, dict)
+    album.insert(conn, dict.values())
     print("Insert bem-sucedido!")
     
 

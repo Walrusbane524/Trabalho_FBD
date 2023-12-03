@@ -4,32 +4,36 @@ import controllers.sql.interprete_musica as interp_mus
 
 def buildDict():
     dict = {}
-    input = ''
+    user_input = ''
 
     print("Insira o código do interprete: ", end='')
-    input = input()
-    if input != '':
-        dict['cod_interprete'] = int(input)
+    user_input = input()
+    if user_input != '':
+        dict['cod_interprete'] = int(user_input)
     else:
         print("Insira um valor!")
         return buildDict()
 
     print("Insira o código da música: ", end='')
-    input = input()
-    if input != '':
-        dict['cod_musica'] = int(input)
+    user_input = input()
+    if user_input != '':
+        dict['cod_musica'] = int(user_input)
     else:
         print("Insira um valor!")
         return buildDict()
 
     return dict
     
+def select(conn):
+    print("Insira os valores da condição de select:\n")
+    dict = buildDict(True)
+    return interp_mus.select(conn, where=dict)
+
 def insert(conn):
     print("Insira os valores para o novo álbum:\n")
     dict = buildDict()
-    interp_mus.insert(conn, dict)
+    interp_mus.insert(conn, dict.values())
     print("Insert bem-sucedido!")
-    
 
 def delete(conn):
     print("Insira os valores da condição para deleção:\n")

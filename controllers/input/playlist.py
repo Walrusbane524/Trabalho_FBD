@@ -1,56 +1,72 @@
-import controllers.sql.periodo as periodo
+import controllers.sql.playlist as playlist
 from datetime import date
 
-# COLUMNS = ['cod_playlist', 'tempo_de_execucao_total', 'data_criacao']
+# COLUMNS = ['cod_playlist', 'nome', 'tempo_de_execucao_total', 'data_criacao']
 
 def buildDict(optional=True):
     dict = {}
-    input = ''
+    user_input = ''
     
     if optional:
         print("**Aperte somente enter para pular o input**")
 
     print("Insira o código da playlist: ", end='')
-    input = input()
-    if input != '':
-        dict['cod_playlist'] = int(input)
+    user_input = input()
+    if user_input != '':
+        dict['cod_playlist'] = int(user_input)
+    else:
+        if not optional:
+            print("Insira um valor!")
+            return buildDict(optional)
+
+    print("Insira o nome da playlist: ", end='')
+    user_input = input()
+    if user_input != '':
+        dict['nome'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira o tempo de execução total: ", end='')
-    input = input()
-    if input != '':
-        dict['comeco'] = input
+    user_input = input()
+    if user_input != '':
+        dict['tempo_de_execucao_total'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira a data de criação: ", end='')
-    input = input()
-    if input != '':
-        dict['data_criacao'] = input
+    user_input = input()
+    if user_input != '':
+        dict['data_criacao'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
+    print(dict)
 
     return dict
-    
+
+def select(conn):
+    print("Insira os valores da condição de select:\n")
+    dict = buildDict(True)
+    return playlist.select(conn, where=dict)
+
 def insert(conn):
-    print("Insira os valores para o novo álbum:\n")
+    print("Insira os valores para a nova playlist:\n")
     dict = buildDict(False)
 
     dict['tempo_de_execucao_total'] = "NULL"
-
     current_date = date.today()
-    dict['data_criacao'] = current_date
+    dict['data_criacao'] = str(current_date)
 
-    periodo.insert(conn, dict)
+    #print(dict.values())
+
+    playlist.insert(conn, dict.values())
     print("Insert bem-sucedido!")
-    
+    return dict
 
 def delete(conn):
     print("Insira os valores da condição para deleção:\n")
@@ -58,7 +74,7 @@ def delete(conn):
     while where_dict == {}:
         print("A condição de deleção não pode ser vazia!")
         where_dict = buildDict()
-    periodo.delete(conn, where_dict)
+    playlist.delete(conn, where_dict)
     print("Delete bem-sucedido!")
 
 def update(conn):
@@ -74,5 +90,5 @@ def update(conn):
         print("Deve haver pelo menos uma coluna a ser modificada!")
         set_dict = buildDict()
 
-    periodo.update(conn, set_dict, where_dict)
+    playlist.update(conn, set_dict, where_dict)
     print("Delete bem-sucedido!")

@@ -3,7 +3,7 @@ import controllers.sql.general as sql
 TABLENAME = "gravadora"
 
 def select(conn, columns = [], where = {}):
-    return sql.select(conn, TABLENAME, columns=columns, where=where)
+    return sql.select(conn, TABLENAME, columns=columns, where_dict=where)
 
 def insert(conn, values):
     sql.insert(conn, TABLENAME, values)
