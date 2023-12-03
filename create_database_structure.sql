@@ -586,10 +586,10 @@ as
     -- );
 
 
-    select * from playlist p inner join
+    select p.*, faixas from playlist p inner join
 
 (	select 
-		p.cod_playlist, 
+		p.cod_playlist as id, 
 		count(distinct f.cod_musica) as faixas
 	from playlist p 
 	inner join musica_playlist mm
@@ -603,7 +603,7 @@ as
 	where f.cod_tipo_composicao = 'Concerto' or c.cod_periodo = 'Barroco'
 	group by p.cod_playlist
 	) classica
-on classica.cod_playlist = p.cod_playlist
+on classica.id = p.cod_playlist
 
 where classica.faixas = ( --Verificando o número de faixas é igual, se não é porque alguma faixa não satisfez a condição
 	select count(f.cod_musica) 
