@@ -130,8 +130,8 @@ GO
 --Terceira condição: Sucesso
 
 --Consertado
-
-create trigger barroco on album 
+--Testado com sucesso
+create trigger barroco on compositor_musica
 for insert, update
 as
 begin
@@ -140,9 +140,9 @@ begin
 	--Não pode existir uma faixa do album onde seu período é barroco e sua gravação não é ddd
     if exists (
 	
-		select c.cod_periodo, f.tipo_gravacao from inserted i
+		select c.cod_periodo, f.tipo_gravacao from album i
 		inner join faixa f on f.cod_album = i.cod_album
-		inner join compositor_musica cm on cm.cod_musica = f.cod_musica
+		inner join inserted cm on cm.cod_musica = f.cod_musica
 		inner join compositor c on c.cod_compositor = cm.cod_compositor
 		where
 		(
@@ -157,9 +157,22 @@ begin
     end
 end
 
+
+-- INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_album)
+-- VALUES (93, 'Song 3', '00:14:30', 'Conserto', 'TESTE', 1);
+
+-- INSERT INTO compositor (cod_compositor, nome, data_de_nascimento, data_de_falecimento, local_nascimento, cod_periodo)
+-- VALUES (73, 'Composer 2', '1600-01-01', '1700-01-01', 'City, Country', 'Barroco');
+
+-- INSERT INTO compositor_musica (cod_musica, cod_compositor)
+-- VALUES
+--   (93,73)
+
+
 GO
 
 --Consertado
+--Testado com sucesso
 create trigger precoAlto on album 
 for insert, update
 as
@@ -183,6 +196,16 @@ begin
         rollback
     end
 end
+
+--Teste: Sucesso
+-- select * 
+-- 			from album
+-- 			where cod_album 
+-- 			in (
+-- 				select distinct cod_album 
+-- 				from faixa 
+-- 				where tipo_gravacao = 'DDD'
+-- 			)
 
 GO
 
@@ -283,6 +306,8 @@ end;
 
 GO
 
+
+--Testado: Sucesso
 create trigger calcularTamanhoPlaylist on musica_playlist
 after insert, update 
 as 
@@ -344,7 +369,6 @@ select
 GO
 
 -- Criar a função
-
 create function ObterAlbumsPorCompositor
 (
     @NomeCompositor varchar(255)
@@ -353,12 +377,13 @@ returns table
 as
 return
 (
-    select c.nome from album a
+    select c.nome, a.* from album a
     inner join faixa f on f.cod_album = a.cod_album
     inner join compositor_musica cm on f.cod_musica = cm.cod_musica
     inner join compositor c on c.cod_compositor = cm.cod_compositor
     where c.nome like '%' + @NomeCompositor + '%'
 );
+
 
 
 --Setima condição: Pesquisa da database

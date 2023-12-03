@@ -331,3 +331,13 @@ VALUES (21, 24, 12, '2023-04-15');
 -- WITH ROLLBACK IMMEDIATE;
 -- GO
 -- DROP DATABASE BDSpotPer;
+
+INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_album)
+VALUES (193, 'Song 3', '00:14:30', 'Conserto', 'TESTE', 1);
+
+INSERT INTO compositor (cod_compositor, nome, data_de_nascimento, data_de_falecimento, local_nascimento, cod_periodo)
+VALUES (173, 'Composer 2', '1600-01-01', '1700-01-01', 'City, Country', 'Barroco');
+
+INSERT INTO compositor_musica (cod_musica, cod_compositor)
+VALUES
+  (193,173)
