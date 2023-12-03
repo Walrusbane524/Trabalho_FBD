@@ -1,6 +1,7 @@
 from importlib import import_module
 import controllers.input as sql_input
 import controllers.sql as sql
+from datetime import date
 
 tabelas = ['album', 'compositor', 'midia_fisica', 'faixa', 
            'midia_musica', 'compositor_musica', 'playlist', 
@@ -68,7 +69,79 @@ def handlePlaylistCreation(conn):
         return
     handleAlbumSelection(conn, inserted_playlist)
 
+def handlePlaylistUpdate(conn):
+    playlist_input = import_module('controllers.input.playlist')
+
+def playPlaylistTracks(conn, playlist_id):
+    play_mus_input_module = import_module('controllers.input.musica_playlist')
+    play_mus_sql_module = import_module('controllers.sql.musica_playlist')
+    user_input = ''
+    while user_input != 'q':
+        print("Escolha uma música ou aperte q para sair:")
+        play_mus_sql_module.printList(play_mus_sql_module.select(conn, where={'cod_playlist': playlist_id}))
+        user_input = input().lower()
+        if user_input != 'q':
+            try:
+                number_input = int(user_input)
+                vezes_tocadas = play_mus_sql_module.select(conn, where={'cod_musica': number_input, 'cod_playlist': playlist_id})[0]["numero_de_vezes_tocada"]
+                #print("vezes_tocadas", vezes_tocadas)
+                play_mus_sql_module.update(conn, 
+                                           {'cod_musica': number_input, 
+                                            'cod_playlist': playlist_id, 
+                                            'numero_de_vezes_tocada': vezes_tocadas + 1,
+                                            'ultima_vez_tocada': str(date.today())}, 
+                                           {'cod_musica': number_input, 
+                                            'cod_playlist': playlist_id})
+                print("Musica tocada com sucesso")
+            except:
+                print("Insira um valor válido")
+
+def playPlaylist(conn):
+    playlist_sql_module = import_module('controllers.sql.playlist')
+    user_input = ''
+
+    while user_input.lower() != 'q':
+        print("Escolha uma playlist ou aperte q para sair:")
+        playlist_sql_module.printList(playlist_sql_module.select(conn))
+        user_input = input()
+        if user_input.lower() != 'q':
+            try:
+                number_input = int(user_input)
+                playPlaylistTracks(conn, number_input)
+            except:
+                print("Insira um valor válido")
+
+
+
+def playlistMenu(conn):
+    playlist_input_module = import_module('controllers.input.playlist')
+    playlist_sql_module = import_module('controllers.sql.playlist')
+    input_number = 0
+
+    while input_number != 6:
+        print("Tabela escolhida: Playlist")
+        print("Escolha uma das tabelas (digite o número):")
+        print("1. Select")
+        print("2. Insert")
+        print("3. Update")
+        print("4. Delete")
+        print("5. Tocar Playlist")
+        print("6. Sair")
+
+        input_number = int(input())
+        if (input_number not in range(1, 7)):
+            print('Insira um número válido!')
     
+        if input_number == 1:
+            playlist_sql_module.printList(playlist_input_module.select(conn))
+        elif input_number == 2:
+            handlePlaylistCreation(conn)
+        elif input_number == 3:
+            playlist_input_module.update(conn)
+        elif input_number == 4:
+            playlist_input_module.delete(conn)
+        elif input_number == 5:
+            playPlaylist(conn)
 
 def escolhaTabela(conn):
     print("Escolha uma das tabelas (digite o número):")
@@ -98,30 +171,31 @@ def escolherAçãoTabela(conn, tabela):
     dynamic_input_module = import_module('controllers.input.' + tabela)
     dynamic_sql_module = import_module('controllers.sql.' + tabela)
     input_number = 0
-    while input_number != 5:
-        print("Tabela escolhida: " + tabela.upper())
-        print("Escolha uma das tabelas (digite o número):")
-        print("1. Select")
-        print("2. Insert")
-        print("3. Update")
-        print("4. Delete")
-        print("5. Sair")
 
-        input_number = int(input())
-        if (input_number not in range(1, 6)):
-            print('Insira um número válido!')
-    
-        if input_number == 1:
-            dynamic_sql_module.printList(dynamic_input_module.select(conn))
-        elif input_number == 2:
-            if not tabela == 'playlist':
+    if tabela == 'playlist':
+        playlistMenu(conn)
+    else: 
+        while input_number != 5:
+            print("Tabela escolhida: " + tabela.upper())
+            print("Escolha uma das tabelas (digite o número):")
+            print("1. Select")
+            print("2. Insert")
+            print("3. Update")
+            print("4. Delete")
+            print("5. Sair")
+
+            input_number = int(input())
+            if (input_number not in range(1, 6)):
+                print('Insira um número válido!')
+        
+            if input_number == 1:
+                dynamic_sql_module.printList(dynamic_input_module.select(conn))
+            elif input_number == 2:
                 dynamic_input_module.insert(conn)
-            else:
-                handlePlaylistCreation(conn)
-        elif input_number == 3:
-            dynamic_input_module.update(conn)
-        elif input_number == 4:
-            dynamic_input_module.delete(conn)
+            elif input_number == 3:
+                dynamic_input_module.update(conn)
+            elif input_number == 4:
+                dynamic_input_module.delete(conn)
 
 def menu(conn):
     tabela = ''
