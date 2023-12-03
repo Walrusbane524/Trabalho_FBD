@@ -17,7 +17,7 @@ create table telefone(
 
 create table album(
     cod_album int primary key not null ,
-    tipoCompra varchar(20) not null, 
+    tipoCompra varchar(20) not null check (tipoCompra = 'debito' or tipoCompra = 'credito' or tipoCompra = 'dinheiro'), 
     preco decimal(10,2) not null,
     data_de_gravacao date check (data_de_gravacao > '2000-01-01'), --Posterior a 2000
     data_da_compra date,
@@ -28,7 +28,7 @@ create table album(
 
 create table midiaFisica(
     cod_meio int primary key not null,
-    tipo varchar(20),
+    tipo varchar(20) check (tipo = 'CD' or tipo = 'Vinyl' or tipo = 'download'),
     cod_album int not null,
 
     --tem um trigger para lidar com o caso de ser cd ou vinil e poder adicionar vários
@@ -614,5 +614,5 @@ where classica.faixas = ( --Verificando o número de faixas é igual, se não é
 
 
 
-    --Falta: on delete cascade para midia
+    --Falta: on delete cascade para midia_musica
     --       consertar os indices clusterizados do item 4
