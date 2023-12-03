@@ -129,10 +129,10 @@ def handlePlaylistUpdate(conn):
         playlist_sql_module.printList(playlist_sql_module.select(conn))
         user_input = input()
         if user_input.lower() != 'q':
-            #try:
+            try:
                 number_input = int(user_input)
                 handlePlaylistMusicUpdate(conn, number_input)
-            #except:
+            except:
                 print("Insira um valor válido")
 
 def playPlaylistTracks(conn, playlist_id):
