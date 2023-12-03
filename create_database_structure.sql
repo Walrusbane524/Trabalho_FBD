@@ -448,11 +448,17 @@ returns table
 as
 return
 (
-    select c.nome, a.* from album a
+    select album.*, nome from album inner join 
+
+
+    (select c.nome, f.cod_album from album a
     inner join faixa f on f.cod_album = a.cod_album
     inner join compositor_musica cm on f.cod_musica = cm.cod_musica
     inner join compositor c on c.cod_compositor = cm.cod_compositor
     where c.nome like '%' + @NomeCompositor + '%'
+    group by f.cod_album, c.nome) albunsDoCompositor
+
+    on albunsDoCompositor.cod_album = album.cod_album
 );
 
 
