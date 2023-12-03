@@ -2,33 +2,33 @@
 USE BDSpotPer;
 
 create table gravadora(
-    cod_gravadora int primary key,
+    cod_gravadora int primary key not null,
     Endereco_homepage varchar(255),
     Endereco varchar(255),
     nome varchar(255) not null
 )
 
 create table telefone(
-    numero varchar(10) primary key,
+    numero varchar(10) primary key not null,
     cod_gravadora int,
 
-    foreign key(cod_gravadora) references gravadora(cod_gravadora);
+    foreign key(cod_gravadora) references gravadora(cod_gravadora)
 )
 
 
 create table album(
-    cod_album int primary key,
+    cod_album int primary key not null ,
     tipoCompra varchar(20) not null, 
     preco decimal(10,2) not null,
     data_de_gravacao date check (data_de_gravacao > '2000-01-01'), --Posterior a 2000
     data_da_compra date,
-    cod_gravadora int
+    cod_gravadora int not null
 
 	foreign key(cod_gravadora) references gravadora(cod_gravadora)
 )
 
 create table midiaFisica(
-    cod_meio int primary key,
+    cod_meio int primary key not null,
     tipo varchar(20),
     cod_album int,
 
@@ -38,23 +38,22 @@ create table midiaFisica(
     foreign key(cod_album) references album(cod_album) on delete cascade
 )
 create table tipo_de_composicao(
-    cod_tipo_composicao varchar(20) primary key,
+    cod_tipo_composicao varchar(20) primary key not null,
     descricao varchar(255)
 )
 
 create table interprete(
-    cod_interprete int primary key,
+    cod_interprete int primary key not null,
     nome varchar(255) not null,
     tipo varchar(20) not null
 )
 
 create table faixa(
-    cod_musica int primary key,
+    cod_musica int primary key not null,
     descricao varchar(255),
     tempo_de_execucao time not null,
     cod_tipo_composicao varchar(20) not null,
     tipo_gravacao varchar(10) not null,
-    cod_gravadora int,
     cod_album int not null
 
     foreign key(cod_tipo_composicao) references tipo_de_composicao(cod_tipo_composicao),
@@ -84,14 +83,14 @@ create table midia_musica(
 
 
 create table periodo(
-    cod_periodo varchar(255) primary key,
+    cod_periodo varchar(255) primary key not null,
     comeco date,
     fim date,
     descricao varchar(255)
 )
 
 create table compositor(
-    cod_compositor int primary key,
+    cod_compositor int primary key not null,
     nome varchar(255) not null,
     data_de_nascimento date,
     data_de_falecimento date,
@@ -111,7 +110,7 @@ create table compositor_musica(
 )
 
 create table playlist(
-    cod_playlist int primary key,
+    cod_playlist int primary key not null,
     nome varchar(255) not null,
     tempo_de_execucao_total time,
     data_criacao date,
