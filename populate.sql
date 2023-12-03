@@ -1,18 +1,20 @@
 --Tabelas independentes: Gravadora, Periodo, Interprete, Playlist, Tipo de composição 
 
 --Gravadora
-INSERT INTO gravadora (cod_gravadora, Endereco_homepage, Endereco, nome, telefone)
+INSERT INTO gravadora (cod_gravadora, Endereco_homepage, Endereco, nome)
 VALUES
-  (1, 'http://www.example1.com', '123 Main St', 'Record Company 1', '123-456-7890'),
-  (2, 'http://www.example2.com', '456 Oak St', 'Music Producers Ltd', '987-654-3210'),
-  (3, 'http://www.example3.com', '789 Pine St', 'Sound Studios', '111-222-3333'),
-  (4, 'http://www.example4.com', '321 Elm St', 'Melody Creations', '555-666-7777'),
-  (5, 'http://www.example5.com', '567 Birch St', 'Harmony Records', '999-888-7777'),
-  (6, 'http://www.example6.com', '890 Cedar St', 'Rhythm Entertainment', '444-333-2222'),
-  (7, 'http://www.example7.com', '765 Maple St', 'Symphony Productions', '333-444-5555'),
-  (8, 'http://www.example8.com', '432 Fir St', 'Song Crafters', '777-888-9999'),
-  (9, 'http://www.example9.com', '876 Pine St', 'Note Studios', '222-111-0000'),
-  (10, 'http://www.example10.com', '543 Oak St', 'Tune Makers', '666-555-4444');
+  (1, 'http://www.example1.com', '123 Main St', 'Record Company 1'),
+  (2, 'http://www.example2.com', '456 Oak St', 'Music Producers Ltd'),
+  (3, 'http://www.example3.com', '789 Pine St', 'Sound Studios'),
+  (4, 'http://www.example4.com', '321 Elm St', 'Melody Creations'),
+  (5, 'http://www.example5.com', '567 Birch St', 'Harmony Records'),
+  (6, 'http://www.example6.com', '890 Cedar St', 'Rhythm Entertainment'),
+  (7, 'http://www.example7.com', '765 Maple St', 'Symphony Productions'),
+  (8, 'http://www.example8.com', '432 Fir St', 'Song Crafters'),
+  (9, 'http://www.example9.com', '876 Pine St', 'Note Studios'),
+  (10, 'http://www.example10.com', '543 Oak St', 'Tune Makers');
+
+  
 
 --Periodo
 -- Insert data into periodo table
@@ -82,7 +84,33 @@ VALUES ('Barroco', '1600-01-01', '1700-12-31', 'Estilo do século 17');
 INSERT INTO tipo_de_composicao (cod_tipo_composicao, descricao)
 VALUES ('Conserto', 'Conserto');
 
---Tabelas dependentes grau 1: Compositor, Album
+--Tabelas dependentes grau 1: Compositor, Album, Telefone
+
+--Telefone
+
+INSERT INTO telefone (numero, cod_gravadora)
+VALUES
+    ('5551111111', 1),
+    ('5552222222', 2),
+    ('5553333333', 3),
+    ('5554444444', 4),
+    ('5555555555', 5),
+    ('5556666666', 6),
+    ('5557777777', 7),
+    ('5558888888', 8),
+    ('5559999999', 9),
+    ('5551010101', 10),
+    ('5552020202', 1),
+    ('5553030303', 2),
+    ('5554040404', 3),
+    ('5555050505', 4),
+    ('5556060606', 5),
+    ('5557070707', 6),
+    ('5558080808', 7),
+    ('5559090909', 8),
+    ('5551231234', 9),
+    ('5555675678', 10),
+    ('5559876543', 1)
 
 -- Insert data into compositor table
 INSERT INTO compositor (cod_compositor, nome, data_de_nascimento, data_de_falecimento, local_nascimento, cod_periodo)
@@ -115,16 +143,16 @@ VALUES
 
 
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
-VALUES (4, 'Song 1', '00:04:30', 'Rock', 'DDD', 1, 1);
+VALUES (4, 'Song 1', '00:04:30', 'Rock', 'DDD', 1);
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
-VALUES (6, 'Song 1', '00:04:30', 'Rock', 'DDD', 1, 1);
+VALUES (6, 'Song 1', '00:04:30', 'Rock', 'DDD', 1);
 
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
-VALUES (17, 'Song 1', '00:04:30', 'Conserto', 'DDD', 1, 1);
+VALUES (17, 'Song 1', '00:04:30', 'Conserto', 'DDD', 1);
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
-VALUES (18, 'Song 1', '00:04:30', 'Conserto', 'DDD', 1, 1);
+VALUES (18, 'Song 1', '00:04:30', 'Conserto', 'DDD', 1);
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
-VALUES (19, 'Song 3', '00:14:30', 'Conserto', 'DDD', 1, 1);
+VALUES (19, 'Song 3', '00:14:30', 'Conserto', 'DDD', 1);
 
 
 INSERT INTO compositor (cod_compositor, nome, data_de_nascimento, data_de_falecimento, local_nascimento, cod_periodo)
@@ -151,26 +179,26 @@ VALUES
 
 INSERT INTO faixa (cod_musica, descricao, tempo_de_execucao, cod_tipo_composicao, tipo_gravacao, cod_gravadora, cod_album)
 VALUES
-  (51, 'Track 51', '00:03:45', 'Pop', 'Stereo', 1, 1),
-  (52, 'Track 52', '00:04:30', 'Rock', 'Stereo', 2, 2),
-  (53, 'Track 53', '00:02:15', 'Jazz', 'Mono', 3, 3),
-  (54, 'Track 54', '00:03:20', 'Electronic', 'Stereo', 4, 4),
-  (55, 'Track 55', '00:04:10', 'Hip-Hop', 'Stereo', 5, 5),
-  (56, 'Track 56', '00:02:45', 'Classical', 'Mono', 6, 6),
-  (57, 'Track 57', '00:03:30', 'Country', 'Stereo', 7, 7),
-  (58, 'Track 58', '00:04:00', 'Blues', 'Stereo', 8, 8),
-  (59, 'Track 59', '00:03:15', 'R&B', 'Stereo', 9, 9),
-  (60, 'Track 60', '00:02:50', 'Indie', 'Mono', 10, 10),
-  (61, 'Track 61', '00:03:40', 'Pop', 'Stereo', 1, 1),
-  (62, 'Track 62', '00:04:25', 'Rock', 'Stereo', 2, 2),
-  (63, 'Track 63', '00:02:10', 'Jazz', 'Mono', 3, 3),
-  (64, 'Track 64', '00:03:15', 'Electronic', 'Stereo', 4, 4),
-  (65, 'Track 65', '00:04:05', 'Hip-Hop', 'Stereo', 5, 5),
-  (66, 'Track 66', '00:02:40', 'Classical', 'Mono', 6, 6),
-  (67, 'Track 67', '00:03:25', 'Country', 'Stereo', 7, 7),
-  (68, 'Track 68', '00:03:55', 'Blues', 'Stereo', 8, 8),
-  (69, 'Track 69', '00:03:10', 'R&B', 'Stereo', 9, 9),
-  (70, 'Track 70', '00:02:45', 'Indie', 'Mono', 10, 10);
+  (51, 'Track 51', '00:03:45', 'Pop', 'Stereo', 1),
+  (52, 'Track 52', '00:04:30', 'Rock', 'Stereo', 2),
+  (53, 'Track 53', '00:02:15', 'Jazz', 'Mono', 3),
+  (54, 'Track 54', '00:03:20', 'Electronic', 'Stereo', 4),
+  (55, 'Track 55', '00:04:10', 'Hip-Hop', 'Stereo', 5),
+  (56, 'Track 56', '00:02:45', 'Classical', 'Mono', 6),
+  (57, 'Track 57', '00:03:30', 'Country', 'Stereo', 7),
+  (58, 'Track 58', '00:04:00', 'Blues', 'Stereo', 8),
+  (59, 'Track 59', '00:03:15', 'R&B', 'Stereo', 9),
+  (60, 'Track 60', '00:02:50', 'Indie', 'Mono',  10),
+  (61, 'Track 61', '00:03:40', 'Pop', 'Stereo', 1),
+  (62, 'Track 62', '00:04:25', 'Rock', 'Stereo', 2),
+  (63, 'Track 63', '00:02:10', 'Jazz', 'Mono', 3),
+  (64, 'Track 64', '00:03:15', 'Electronic', 'Stereo', 4),
+  (65, 'Track 65', '00:04:05', 'Hip-Hop', 'Stereo', 5),
+  (66, 'Track 66', '00:02:40', 'Classical', 'Mono', 6),
+  (67, 'Track 67', '00:03:25', 'Country', 'Stereo', 7),
+  (68, 'Track 68', '00:03:55', 'Blues', 'Stereo', 8),
+  (69, 'Track 69', '00:03:10', 'R&B', 'Stereo', 9),
+  (70, 'Track 70', '00:02:45', 'Indie', 'Mono',  10);
 
 -- Insert data into musica_playlist table with cod_musica values from 50 to 70
 -- Insert data into musica_playlist table with cod_musica values from 50 to 70 and cod_playlist values looping from 1 to 10

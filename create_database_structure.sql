@@ -2,26 +2,33 @@
 USE BDSpotPer;
 
 create table gravadora(
-    cod_gravadora int primary key,
+    cod_gravadora int primary key not null,
     Endereco_homepage varchar(255),
     Endereco varchar(255),
-    nome varchar(255) not null,
-    telefone varchar(20)
+    nome varchar(255) not null
 )
 
+create table telefone(
+    numero varchar(10) primary key not null,
+    cod_gravadora int,
+
+    foreign key(cod_gravadora) references gravadora(cod_gravadora)
+)
+
+
 create table album(
-    cod_album int primary key,
+    cod_album int primary key not null ,
     tipoCompra varchar(20) not null, 
     preco decimal(10,2) not null,
     data_de_gravacao date check (data_de_gravacao > '2000-01-01'), --Posterior a 2000
     data_da_compra date,
-    cod_gravadora int
+    cod_gravadora int not null
 
 	foreign key(cod_gravadora) references gravadora(cod_gravadora)
 )
 
 create table midiaFisica(
-    cod_meio int primary key,
+    cod_meio int primary key not null,
     tipo varchar(20),
     cod_album int,
 
@@ -31,23 +38,22 @@ create table midiaFisica(
     foreign key(cod_album) references album(cod_album) on delete cascade
 )
 create table tipo_de_composicao(
-    cod_tipo_composicao varchar(20) primary key,
+    cod_tipo_composicao varchar(20) primary key not null,
     descricao varchar(255)
 )
 
 create table interprete(
-    cod_interprete int primary key,
+    cod_interprete int primary key not null,
     nome varchar(255) not null,
     tipo varchar(20) not null
 )
 
 create table faixa(
-    cod_musica int primary key,
+    cod_musica int primary key not null,
     descricao varchar(255),
     tempo_de_execucao time not null,
     cod_tipo_composicao varchar(20) not null,
     tipo_gravacao varchar(10) not null,
-    cod_gravadora int,
     cod_album int not null
 
     foreign key(cod_tipo_composicao) references tipo_de_composicao(cod_tipo_composicao),
@@ -77,14 +83,14 @@ create table midia_musica(
 
 
 create table periodo(
-    cod_periodo varchar(255) primary key,
+    cod_periodo varchar(255) primary key not null,
     comeco date,
     fim date,
     descricao varchar(255)
 )
 
 create table compositor(
-    cod_compositor int primary key,
+    cod_compositor int primary key not null,
     nome varchar(255) not null,
     data_de_nascimento date,
     data_de_falecimento date,
@@ -104,7 +110,7 @@ create table compositor_musica(
 )
 
 create table playlist(
-    cod_playlist int primary key,
+    cod_playlist int primary key not null,
     nome varchar(255) not null,
     tempo_de_execucao_total time,
     data_criacao date,
@@ -152,6 +158,8 @@ begin
     end
 end
 
+GO
+
 --Consertado
 create trigger precoAlto on album 
 for insert, update
@@ -177,6 +185,8 @@ begin
     end
 end
 
+GO
+
 --Consertado
 create trigger limiteTamanho on album
 for insert, update
@@ -198,6 +208,8 @@ begin
     
 end
 
+GO
+
 --Consertado
 create trigger CdVinilDownload on midiaFisica
 for insert, update
@@ -216,6 +228,7 @@ begin
     end
 end;
 
+GO
 
 --Consertado
 create trigger deletarMeioFisico on faixa
@@ -236,6 +249,8 @@ begin
 	)
     
 end;
+
+GO
 
 --Consertado
 create trigger tipoGravacao on faixa
@@ -267,6 +282,8 @@ begin
     
 end;
 
+GO
+
 create trigger calcularTamanhoPlaylist on musica_playlist
 after insert, update 
 as 
@@ -287,12 +304,15 @@ begin
     
 end
 
+GO
+
 --Quarta condição: Sucesso
 
 CREATE UNIQUE CLUSTERED INDEX IX_Faixa_CodigoAlbum
 ON faixa(cod_album)
 WITH FILLFACTOR = 100;
 
+GO
 
 CREATE NONCLUSTERED INDEX IX_Faixa_TipoComposicao
 ON faixa(cod_tipo_composicao)
@@ -301,6 +321,7 @@ WITH FILLFACTOR = 100;
 
 --Quinta condição: Sucesso
 
+GO
 
 -- Criar a visão materializada: consertar outer join
 create view visaoPlaylist
@@ -316,6 +337,8 @@ select
 
 
 --Sexta condição: Sucesso
+
+GO
 
 -- Criar a função
 
@@ -337,11 +360,14 @@ return
 
 --Setima condição: Pesquisa da database
 
+GO
 
 --i)
 create view mostrarAlbunsComFaixas
 as
 select * from album join faixa on faixa.cod_album = album.cod_album
+
+GO
 
 --ii)
 create view mostrarPlaylistsComMusicas
@@ -352,6 +378,7 @@ on playlist.cod_playlist = musica_playlist.cod_playlist
 left outer join faixa 
 on faixa.cod_musica = musica_playlist.cod_musica
 
+GO
 
 create procedure inserirMusica
 (
@@ -362,6 +389,8 @@ as
 begin
     insert into musica_playlist values(@musicaInserida, @playlistCodigo, 0, null)
 end
+
+GO
 
 create procedure removerMusica
 (
@@ -376,7 +405,7 @@ end
 --iii)
 
 --a)
-
+GO
 --Meio que uma gambiarra, mas evita de repetir a query (select avg(preco) from album) cada vez
 create view albumsCaros
 as
@@ -384,6 +413,7 @@ select * from album album
 join (select avg(preco) from album) medio 
 where album.preco > medio.preco
 
+GO
 
 --b)Listar nome da gravadora com maior número de playlists que possuem pelo uma faixa composta pelo compositor Dvorack.
 
@@ -424,6 +454,7 @@ join
     ) melhorGravadora
 on gravadora.cod_gravadora = melhorGravadora.id
 
+GO
 
 --c) Listar nome do compositor com maior número de faixas nas playlists existentes.
 
@@ -446,6 +477,8 @@ as
 
 --d) Listar playlists, cujas faixas (todas) têm tipo de composição “Concerto” e período “Barroco”
 
+GO
+
 create view playlistsClassicas
 as 
 
@@ -457,5 +490,5 @@ as
         full join faixa f               on f.cod_musica = mp.cod_musica
         inner join compositor_musica cm on cm.cod_musica = f.cod_musica 
         inner join compositor c         on c.cod_compositor = cm.cod_compositor
-        where mp.cod_playlist = p.cod_playlist and c.cod_tipo_composicao != 'Concerto' or c.cod_periodo != 'Barroco'
+        where mp.cod_playlist = p.cod_playlist and f.cod_tipo_composicao != 'Concerto' or c.cod_periodo != 'Barroco'
     )
