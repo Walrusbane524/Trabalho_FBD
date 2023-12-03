@@ -614,6 +614,5 @@ where classica.faixas = ( --Verificando o número de faixas é igual, se não é
 
 
 
-    --Falta: on delete cascade para cada tabela intermediária
-    --       testar as views do item 7
+    --Falta: on delete cascade para midia
     --       consertar os indices clusterizados do item 4
