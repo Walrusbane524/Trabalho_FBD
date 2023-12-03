@@ -4,83 +4,87 @@ import controllers.sql.faixa as faixa
 
 def buildDict(optional=True):
     dict = {}
-    input = ''
+    user_input = ''
     
     if optional:
         print("**Aperte somente enter para pular o input**")
 
     print("Insira o código da música: ", end='')
-    input = input()
-    if input != '':
-        dict['cod_musica'] = int(input)
+    user_input = input()
+    if user_input != '':
+        dict['cod_musica'] = int(user_input)
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira a descrição da música: ", end='')
-    input = input()
-    if input != '':
-        dict['descricao'] = input
+    user_input = input()
+    if user_input != '':
+        dict['descricao'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira o tempo de execução da música: ", end='')
-    input = input()
-    if input != '':
-        dict['tempo_de_execucao'] = input
+    user_input = input()
+    if user_input != '':
+        dict['tempo_de_execucao'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira a tipo de gravacao da música: ", end='')
-    input = input()
-    if input != '':
-        dict['tipo_gravacao'] = input
+    user_input = input()
+    if user_input != '':
+        dict['tipo_gravacao'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
     
     print("Insira o código do tipo de composição da música: ", end='')
-    input = input()
-    if input != '':
-        dict['cod_tipo_composicao'] = int(input)
+    user_input = input()
+    if user_input != '':
+        dict['cod_tipo_composicao'] = int(user_input)
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira o código da gravadora da música: ", end='')
-    input = input()
-    if input != '':
-        dict['cod_gravadora'] = int(input)
+    user_input = input()
+    if user_input != '':
+        dict['cod_gravadora'] = int(user_input)
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
         
     print("Insira o código do álbum da música: ", end='')
-    input = input()
-    if input != '':
-        dict['cod_album'] = int(input)
+    user_input = input()
+    if user_input != '':
+        dict['cod_album'] = int(user_input)
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     return dict
-    
+
+def select(conn):
+    print("Insira os valores da condição de select:\n")
+    dict = buildDict(True)
+    return faixa.select(conn, where=dict)
+
 def insert(conn):
     print("Insira os valores para o novo álbum:\n")
     dict = buildDict(False)
-    faixa.insert(conn, dict)
+    faixa.insert(conn, dict.values())
     print("Insert bem-sucedido!")
     
-
 def delete(conn):
     print("Insira os valores da condição para deleção:\n")
     where_dict = buildDict()

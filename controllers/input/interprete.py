@@ -4,33 +4,33 @@ import controllers.sql.interprete as interprete
 
 def buildDict(optional=True):
     dict = {}
-    input = ''
+    user_input = ''
     
     if optional:
         print("**Aperte somente enter para pular o input**")
 
     print("Insira o código do interprete: ", end='')
-    input = input()
-    if input != '':
-        dict['cod_interprete'] = int(input)
+    user_input = input()
+    if user_input != '':
+        dict['cod_interprete'] = int(user_input)
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira o nome do interprete nome: ", end='')
-    input = input()
-    if input != '':
-        dict['Endereco_homepage'] = input
+    user_input = input()
+    if user_input != '':
+        dict['Endereco_homepage'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira o tipo do interprete : ", end='')
-    input = input()
-    if input != '':
-        dict['tipo'] = input
+    user_input = input()
+    if user_input != '':
+        dict['tipo'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
@@ -38,12 +38,16 @@ def buildDict(optional=True):
 
     return dict
     
+def select(conn):
+    print("Insira os valores da condição de select:\n")
+    dict = buildDict(True)
+    return interprete.select(conn, where=dict)
+
 def insert(conn):
     print("Insira os valores para o novo álbum:\n")
     dict = buildDict(False)
-    interprete.insert(conn, dict)
+    interprete.insert(conn, dict.values())
     print("Insert bem-sucedido!")
-    
 
 def delete(conn):
     print("Insira os valores da condição para deleção:\n")

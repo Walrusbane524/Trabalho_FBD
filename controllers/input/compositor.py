@@ -4,23 +4,23 @@ import controllers.sql.compositor as compositor
 
 def buildDict(optional=True):
     dict = {}
-    input = ''
+    user_input = ''
     
     if optional:
         print("**Aperte somente enter para pular o input**")
 
     print("Insira o código do compositor: ", end='')
-    input = input()
-    if input != '':
-        dict['cod_compositor'] = int(input)
+    user_input = input()
+    if user_input != '':
+        dict['cod_compositor'] = int(user_input)
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira o nome do compositor: ", end='')
-    input = input()
-    if input != '':
+    user_input = input()
+    if user_input != '':
         dict['nome'] = input
     else:
         if not optional:
@@ -28,47 +28,52 @@ def buildDict(optional=True):
             return buildDict(optional)
 
     print("Insira a data de nascimento do compositor: ", end='')
-    input = input()
-    if input != '':
-        dict['data_de_nascimento'] = input
+    user_input = input()
+    if user_input != '':
+        dict['data_de_nascimento'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira a data de falecimento do compositor: ", end='')
-    input = input()
-    if input != '':
-        dict['data_de_falecimento'] = input
+    user_input = input()
+    if user_input != '':
+        dict['data_de_falecimento'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira o local de nascimento do compositor: ", end='')
-    input = input()
-    if input != '':
-        dict['local_nascimento'] = input
+    user_input = input()
+    if user_input != '':
+        dict['local_nascimento'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira o código do período do compositor: ", end='')
-    input = input()
-    if input != '':
-        dict['cod_periodo'] = int(input)
+    user_input = input()
+    if user_input != '':
+        dict['cod_periodo'] = int(user_input)
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     return dict
-    
+
+def select(conn):
+    print("Insira os valores da condição de select:\n")
+    dict = buildDict(True)
+    return compositor.select(conn, where=dict)
+
 def insert(conn):
     print("Insira os valores para o novo álbum:\n")
     dict = buildDict(False)
-    compositor.insert(conn, dict)
+    compositor.insert(conn, dict.values())
     print("Insert bem-sucedido!")
     
 

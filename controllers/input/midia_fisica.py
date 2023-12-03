@@ -4,46 +4,50 @@ import controllers.sql.midia_fisica as midia_fisica
 
 def buildDict(optional=True):
     dict = {}
-    input = ''
+    user_input = ''
     
     if optional:
         print("**Aperte somente enter para pular o input**")
 
     print("Insira o código da mídia física: ", end='')
-    input = input()
-    if input != '':
-        dict['cod_meio'] = int(input)
+    user_input = input()
+    if user_input != '':
+        dict['cod_meio'] = int(user_input)
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira o tipo da mídia física: ", end='')
-    input = input()
-    if input != '':
-        dict['tipo'] = input
+    user_input = input()
+    if user_input != '':
+        dict['tipo'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira o código do álbum: ", end='')
-    input = input()
-    if input != '':
-        dict['cod_album'] = int(input)
+    user_input = input()
+    if user_input != '':
+        dict['cod_album'] = int(user_input)
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     return dict
-    
+
+def select(conn):
+    print("Insira os valores da condição de select:\n")
+    dict = buildDict(True)
+    return midia_fisica.select(conn, where=dict)
+
 def insert(conn):
     print("Insira os valores para o novo álbum:\n")
     dict = buildDict(False)
-    midia_fisica.insert(conn, dict)
+    midia_fisica.insert(conn, dict.values())
     print("Insert bem-sucedido!")
-    
 
 def delete(conn):
     print("Insira os valores da condição para deleção:\n")

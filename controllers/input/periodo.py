@@ -4,42 +4,42 @@ import controllers.sql.periodo as periodo
 
 def buildDict(optional=True):
     dict = {}
-    input = ''
+    user_input = ''
     
     if optional:
         print("**Aperte somente enter para pular o input**")
 
     print("Insira o código do período: ", end='')
-    input = input()
-    if input != '':
-        dict['cod_periodo'] = int(input)
+    user_input = input()
+    if user_input != '':
+        dict['cod_periodo'] = int(user_input)
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira o a data de começo do período: ", end='')
-    input = input()
-    if input != '':
-        dict['comeco'] = input
+    user_input = input()
+    if user_input != '':
+        dict['comeco'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira o a data de fim do período: ", end='')
-    input = input()
-    if input != '':
-        dict['fim'] = input
+    user_input = input()
+    if user_input != '':
+        dict['fim'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
             return buildDict(optional)
 
     print("Insira a descrição do período: ", end='')
-    input = input()
-    if input != '':
-        dict['descricao'] = input
+    user_input = input()
+    if user_input != '':
+        dict['descricao'] = user_input
     else:
         if not optional:
             print("Insira um valor!")
@@ -47,12 +47,16 @@ def buildDict(optional=True):
 
     return dict
     
+def select(conn):
+    print("Insira os valores da condição de select:\n")
+    dict = buildDict(True)
+    return periodo.select(conn, where=dict)
+
 def insert(conn):
     print("Insira os valores para o novo álbum:\n")
     dict = buildDict(False)
-    periodo.insert(conn, dict)
+    periodo.insert(conn, dict.values())
     print("Insert bem-sucedido!")
-    
 
 def delete(conn):
     print("Insira os valores da condição para deleção:\n")
